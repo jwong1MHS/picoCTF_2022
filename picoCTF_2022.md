@@ -7,7 +7,6 @@
 - [basic-file-exploit](./picoCTF_2022.md#basic-file-exploit)
 
 ## **basic-file-exploit**
------
 
 ### ***Description***
 The program provided allows you to write to a file and read what you wrote from it. Try playing around with it and see if you can break it! <br>
@@ -18,7 +17,6 @@ The program's source code with the flag redacted can be downloaded [here](https:
     <summary>Hint 1</summary>
     Try passing in things the program doesn't expect. Like a string instead of a number.
 </details>
-<br>
 
 ### ***Writeup***
 Look through the soruce code and find where the flag might be.
@@ -61,7 +59,6 @@ Flag: `picoCTF{M4K3_5UR3_70_CH3CK_Y0UR_1NPU75_25D6CDDB}`
 - [substitution2](./picoCTF_2022.md#substitution2)
 
 ## **basic-mod1**
------
 
 ### ***Description***
 We found this weird message being passed around on the servers, we think we have a working decrpytion scheme. <br>
@@ -76,7 +73,6 @@ Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_
     <summary>Hint 2</summary>
     <code>mod 37</code> means modulo 37. It gives the remainder of a number after being divided by 37.
 </details>
-<br>
 
 ### ***Writeup***
 Make a [python script](./Cryptography/basic-mod1/basic_mod1.py) that will parse the text file and mod every number.
@@ -95,7 +91,6 @@ picoCTF{R0UND_N_R0UND_79C18FB3}
 Flag: `picoCTF{R0UND_N_R0UND_79C18FB3}`
 
 ## **basic-mod2**
------
 
 ### ***Description***
 A new modular challenge! <br>
@@ -114,7 +109,6 @@ Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_
     <summary>Hint 3</summary>
     It's recommended to use a tool to find the modular inverses
 </details>
-<br>
 
 ### ***Writeup***
 Make a [python script](./Cryptography/basic-mod2/basic_mod2.py) that will parse the text file and mod every number and then find the modular inverse using `pow(a,-1,x)`.
@@ -133,7 +127,6 @@ picoCTF{1NV3R53LY_H4RD_C680BDC1}
 Flag: `picoCTF{1NV3R53LY_H4RD_C680BDC1}`
 
 ## **substitution0**
------
 
 ### ***Description***
 A message has come in but it seems to be all scrambled. Luckily it seems to have the key at the beginning. Can you crack this substitution cipher? <br>
@@ -142,7 +135,6 @@ Download the message [here](https://artifacts.picoctf.net/c/379/message.txt).
     <summary>Hint 1</summary>
     Try a frequency attack. An online tool might help.
 </details>
-<br>
 
 ### ***Writeup***
 Make a [python script](./Cryptography/substitution0/substitution0.py) that will take the first line of the message and use it as the substitution key.
@@ -172,7 +164,6 @@ CTFs (short for capture the flag) are a type of computer security competition. C
 Flag: `picoCTF{5UB5717U710N_3V0LU710N_59533A2E}`
 
 ## **substitution1**
------
 
 ### ***Description***
 A second message has come in the mail, and it seems almost identical to the first one. Maybe the same thing will work again.
@@ -185,7 +176,6 @@ Download the message [here](https://artifacts.picoctf.net/c/414/message.txt).
     <summary>Hint 2</summary>
     Do the punctuation and the individual words help you make any substitutions?
 </details>
-<br>
 
 ### ***Writeup***
 Make a [python script](./Cryptography/substitution1/substitution1.py) and slowly replace letters. It started with knowing that the last sentence should have the string `picoCTF{` to knowing that the sentence should include `the flag is: picoCTF{`, and then figuring out that the message has to do with talking about CTFs. It was a lot of replacing letter by letter.
@@ -206,7 +196,6 @@ CTFs (short for capture the flag) are a type of computer security competition. C
 Flag: `picoCTF{FR3QU3NCY_4774CK5_4R3_C001_4871E6FB}`
 
 ## **substitution2**
------
 
 ### ***Description***
 It seems that another encrypted message has been intercepted. The encryptor seems to have learned their lesson though and now there isn't any punctuation! Can you still crack the cipher? <br>
@@ -215,7 +204,6 @@ Download the message [here](https://artifacts.picoctf.net/c/107/message.txt).
     <summary>Hint 1</summary>
     Try refining your frequency attack, maybe analyzing groups of letters would improve your results?
 </details>
-<br>
 
 ### ***Writeup***
 Make a [python script](./Cryptography/substitution2/substitution2.py) and slowly replace letters. It started with knowing that the last sentence should have the string `picoCTF{` to knowing that the sentence should include `theflagispicoCTF{`, and then guessing what some of the words might be using context clues. It was a lot of replacing letter by letter.
@@ -237,7 +225,6 @@ Flag: `picoCTF{N6R4M_4N41Y515_15_73D10U5_8E1BF808}`
 - [Inspect HTML](./picoCTF_2022.md#inspect-html)
 
 ## **Includes**
------
 
 ### ***Description***
 Can you get the flag? <br>
@@ -246,7 +233,6 @@ Go to this [website](http://saturn.picoctf.net:54634/) and see what you can disc
     <summary>Hint 1</summary>
     Is there more code than what the inspector initially shows?
 </details>
-<br>
 
 ### ***Writeup***
 Inspect `style.css` and `script.js` for parts of the flag
@@ -272,7 +258,6 @@ function greetings()
 Flag: `picoCTF{1nclu51v17y_1of2_f7w_2of2_df589022}`
 
 ## **Inspect HTML**
------
 
 ### ***Description***
 Can you get the flag? <br>
@@ -281,7 +266,6 @@ Go to this [website](http://saturn.picoctf.net:50920/) and see what you can disc
     <summary>Hint 1</summary>
     What is the web inspector in web browsers?
 </details>
-<br>
 
 ### ***Writeup***
 Inspect the HTML source code
