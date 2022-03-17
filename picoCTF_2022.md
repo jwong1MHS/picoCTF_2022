@@ -251,7 +251,7 @@ Go to this [website](http://saturn.picoctf.net:54634/) and see what you can disc
 ### ***Writeup***
 Inspect `style.css` and `script.js` for parts of the flag
 
-`http://saturn.picoctf.net:54634/style.css`:
+`style.css`:
 ```
 body {
   background-color: lightblue;
@@ -259,7 +259,7 @@ body {
 
 /*  picoCTF{1nclu51v17y_1of2_  */
 ```
-`http://saturn.picoctf.net:54634/script.js`:
+`script.js`:
 ```
 function greetings()
 {
@@ -286,7 +286,7 @@ Go to this [website](http://saturn.picoctf.net:50920/) and see what you can disc
 ### ***Writeup***
 Inspect the HTML source code
 
-`view-source:http://saturn.picoctf.net:50920/`:
+`index.html`:
 ```
 <!DOCTYPE html>
 <html lang="en">
