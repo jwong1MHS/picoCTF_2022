@@ -1,1 +1,0 @@
-Inspect style.css and script.js for parts of the flag

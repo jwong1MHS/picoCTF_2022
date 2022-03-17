@@ -16,9 +16,4 @@ with open('message.txt') as f:
                 ret += letter_map.get(i)
             else:
                 ret += i
-    print(contents + "\n")
     print(ret)
-    
-    g = open('flag.txt', 'w')
-    g.write(ret.split("theflagis")[1]+"\n")
-    g.close()

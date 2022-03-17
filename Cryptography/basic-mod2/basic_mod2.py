@@ -11,6 +11,3 @@ with open('message.txt') as f:
             ret += '_'
     ret = 'picoCTF{'+ret+'}'
     print(ret)
-    g = open('flag.txt', 'w')
-    g.write(ret+'\n')
-    g.close()
