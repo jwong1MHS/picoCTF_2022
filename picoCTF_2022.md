@@ -140,14 +140,28 @@ Wrap your answer with picoCTF{}, put underscores in place of pauses, and use all
 </details>
 
 ### ***Writeup***
+After analyzing the wav file using Audacity, I can see that the waveform is split by either short or long waves. The short ones are dots and the long ones are dashes.
 
-![morse_code](./Crytography/morse_code.png)
 
-.-- .... ....- --... / .... ....-
+![morse_code](./Cryptography/morse-code/morse_code.png)
 
-[Morse Code translator](https://morsecode.world/international/translator.html)
+```
+.-- .... ....- --... / .... ....- --... .... / ----. ----- -.. / .-- ..--- ----- ..- ----. .... --...
+```
 
-Flag: `picoCTF{1NV3R53LY_H4RD_C680BDC1}`
+morse code: `WH47 H47H 90D W20U9H7`
+
+```
+└─$ python3
+Python 3.9.10 (main, Feb 22 2022, 13:54:07)
+[GCC 11.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> "picoCTF{" + "WH47 H47H 90D W20U9H7".lower().replace(" ", "_") + "}"
+'picoCTF{wh47_h47h_90d_w20u9h7}'
+>>>
+```
+
+Flag: `picoCTF{wh47_h47h_90d_w20u9h7}`
 
 ## **substitution0**
 
