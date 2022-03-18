@@ -1,7 +1,7 @@
 with open('message.txt') as f:
+    letter_key = f.readline()
     contents = f.read()
     ret = ''
-    letter_key = 'EKSZJTCMXOQUDYLFABGPHNRVIW'
     letter_val = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
     letter_map = {}
 
@@ -16,4 +16,4 @@ with open('message.txt') as f:
                 ret += letter_map.get(i)
             else:
                 ret += i
-    print(ret)
+    print(letter_key + ret)

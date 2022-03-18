@@ -1,7 +1,3 @@
-import sys
-
-usage_msg = "Usage: "+ sys.argv[0] +" [file] [key]"
-
 def generateKey(string, key):
     key = list(key)
     if len(string) == len(key):
@@ -32,12 +28,8 @@ def originalText(cipher_text, key):
             orig_text.append(cipher_text[i])
     return("" . join(orig_text))
 
-if len(sys.argv) != 3:
-    print(usage_msg)
-    sys.exit(1)
-
 with open('cipher.txt') as f:
     cipher_text = f.read()
 
-key = generateKey(cipher_text, sys.argv[2])
+key = generateKey(cipher_text, 'CYLAB')
 print(originalText(cipher_text, key))

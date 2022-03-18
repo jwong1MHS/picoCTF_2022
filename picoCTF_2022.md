@@ -157,8 +157,19 @@ Pmj tuec xg: fxslSPT{5HK5717H710Y_3N0UH710Y_59533E2J}
 ```
 output of `substitution0.py`:
 ```
-└─$ python3 substitution1.py
-CTFs (short for capture the flag) are a type of computer security competition. Contestants are presented with a set of challenges which test their creativity, technical (and googling) skills, and problem-solving ability. Challenges usually cover a number of categories, and when solved, each yields a string (called a flag) which is submitted to an online scoring service. CTFs are a great way to learn a wide array of computer security skills in a safe, legal environment, and are hosted and played by many security groups around the world for fun and practice. For this problem, the flag is: picoCTF{FR3QU3NCY_4774CK5_4R3_C001_4871E6FB}
+└─$ python3 substitution0.py
+EKSZJTCMXOQUDYLFABGPHNRVIW
+
+Hereupon Legrand arose, with a grave and stately air, and brought me the beetle
+from a glass case in which it was enclosed. It was a beautiful scarabaeus, and, at
+that time, unknown to naturalists—of course a great prize in a scientific point
+of view. There were two round black spots near one extremity of the back, and a
+long one near the other. The scales were exceedingly hard and glossy, with all the
+appearance of burnished gold. The weight of the insect was very remarkable, and,
+taking all things into consideration, I could hardly blame Jupiter for his opinion
+respecting it.
+
+The flag is: picoCTF{5UB5717U710N_3V0LU710N_59533A2E}
 ```
 
 Flag: `picoCTF{5UB5717U710N_3V0LU710N_59533A2E}`
@@ -237,12 +248,12 @@ Make a [python script](./Cryptography/Vigenere/vigenere.py) that will do the Vig
 `message.txt`:
 ```
 └─$ cat cipher.txt
-rgnoDVD{O0NU_WQ3_G1G3O3T3_A1AH3S_cc82272b}
+rgnoDVD{O0NU_WQ3_G1G3O3T3_A1AH3S_a23a13a5}
 ```
 output of `vigenere.py`:
 ```
 └─$ python3 vigenere.py cipher.txt CYLAB
-picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_ae82272q}
+picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 ```
 
 
