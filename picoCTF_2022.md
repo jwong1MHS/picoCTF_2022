@@ -99,7 +99,7 @@ Download the data [here](https://artifacts.picoctf.net/c/297/anthem.flag.txt).
 </details>
 
 ### ***Writeup***
-`grep picoCTF{ anthem.flag.txt`
+Run `grep picoCTF{ anthem.flag.txt` in the terminal.
 
 ```
 └─$ grep picoCTF{ anthem.flag.txt
