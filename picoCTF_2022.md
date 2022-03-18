@@ -54,9 +54,11 @@ Flag: `picoCTF{M4K3_5UR3_70_CH3CK_Y0UR_1NPU75_25D6CDDB}`
 # **Cryptography**
 - [basic-mod1](./picoCTF_2022.md#basic-mod1)
 - [basic-mod2](./picoCTF_2022.md#basic-mod2)
+- [morse-code](./picoCTF_2022.md#morse-code)
 - [substitution0](./picoCTF_2022.md#substitution0)
 - [substitution1](./picoCTF_2022.md#substitution1)
 - [substitution2](./picoCTF_2022.md#substitution2)
+- [Vigenere](./picoCTF_2022.md#vigenere)
 
 ## **basic-mod1**
 
@@ -123,6 +125,27 @@ output of `basic_mod2.py`:
 └─$ python3 basic_mod2.py
 picoCTF{1NV3R53LY_H4RD_C680BDC1}
 ```
+
+Flag: `picoCTF{1NV3R53LY_H4RD_C680BDC1}`
+
+## **morse-code**
+
+### ***Description***
+Morse code is well known. Can you decrypt this? <br>
+Download the file [here](https://artifacts.picoctf.net/c/235/morse_chal.wav). <br>
+Wrap your answer with picoCTF{}, put underscores in place of pauses, and use all lowercase.
+<details>
+    <summary>Hint 1</summary>
+    Audacity is a really good program to analyze morse code audio.
+</details>
+
+### ***Writeup***
+
+![morse_code](./Crytography/morse_code.png)
+
+.-- .... ....- --... / .... ....-
+
+[Morse Code translator](https://morsecode.world/international/translator.html)
 
 Flag: `picoCTF{1NV3R53LY_H4RD_C680BDC1}`
 
@@ -259,8 +282,9 @@ picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 
 
 # **Web Exploitation**
-- [Includes](./picoCTF_2022.md#includes)
-- [Inspect HTML](./picoCTF_2022.md#inspect-html)
+- [Includes](./picoCTF_2022.md#Includes)
+- [Inspect HTML](./picoCTF_2022.md#Inspect-html)
+- [Local Authority](./picoCTF_2022.md#Local-Authority)
 
 ## **Includes**
 
@@ -276,7 +300,7 @@ Go to this [website](http://saturn.picoctf.net:54634/) and see what you can disc
 Inspect `style.css` and `script.js` for parts of the flag
 
 `style.css`:
-```
+```css
 body {
   background-color: lightblue;
 }
@@ -284,7 +308,7 @@ body {
 /*  picoCTF{1nclu51v17y_1of2_  */
 ```
 `script.js`:
-```
+```js
 function greetings()
 {
   alert("This code is in a separate file!");
@@ -309,7 +333,7 @@ Go to this [website](http://saturn.picoctf.net:50920/) and see what you can disc
 Inspect the HTML source code
 
 `index.html`:
-```
+```html
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -335,3 +359,94 @@ Inspect the HTML source code
 ```
 
 Flag: `picoCTF{1n5p3t0r_0f_h7ml_1fd8425b}`
+
+## **Local Authority**
+
+### ***Description***
+Can you get the flag? <br>
+Go to this [website](http://saturn.picoctf.net:65317/) and see what you can discover.
+<details>
+    <summary>Hint 1</summary>
+    How is the password checked on this website?
+</details>
+
+### ***Writeup***
+Inspect the HTML source code. Notice that the form is processed in login.php, so there are two ways of getting to login.php. Either give incorrect credentials or go to `http://saturn.picoctf.net:65317/login.php`. After inspecting the php, notice that `checkPassword` will return true if the username is `admin` and the password is `strongPassword098765`. Going back to the login site and giving the correct username and password will give the flag.
+
+`login.php`:
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>Secure Customer Portal</title>
+  </head>
+  <body>
+
+    <h1>Secure Customer Portal</h1>
+    
+   <p>Only letters and numbers allowed for username and password.</p>
+    
+    <form role="form" action="login.php" method="post">
+      <input type="text" name="username" placeholder="Username" required 
+       autofocus></br>
+      <input type="password" name="password" placeholder="Password" required>
+      <button type="submit" name="login">Login</button>
+    </form>
+  </body>
+</html>
+```
+`index.html`:
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>Login Page</title>
+  </head>
+  <body>
+    <script src="secure.js"></script>
+    
+    <p id='msg'></p>
+    
+    <form hidden action="admin.php" method="post" id="hiddenAdminForm">
+      <input type="text" name="hash" required id="adminFormHash">
+    </form>
+    ...
+```
+`secure.js`:
+```js
+function checkPassword(username, password)
+{
+  if( username === 'admin' && password === 'strongPassword098765' )
+  {
+    return true;
+  }
+  else
+  {
+    return false;
+  }
+}
+```
+`admin.php`:
+```html
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="style.css">
+    <title>Secure Customer Portal</title>
+  </head>
+  <body>
+    picoCTF{j5_15_7r4n5p4r3n7_8086bcb1}  </body>
+</html>
+```
+Flag: `picoCTF{j5_15_7r4n5p4r3n7_8086bcb1}`
