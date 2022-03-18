@@ -1,10 +1,12 @@
 # **Table of Contents**
-- [Binary Exploitation](./picoCTF_2022.md#binary-exploitation)
-- [Cryptography](./picoCTF_2022.md#cryptography)
-- [Web Exploitation](./picoCTF_2022.md#web-exploitation)
+- [Binary Exploitation](./picoCTF_2022.md#Binary-Exploitation)
+- [Cryptography](./picoCTF_2022.md#Cryptography)
+- [Forensics](./picoCTF_2022.md#Forensics)
+- [Web Exploitation](./picoCTF_2022.md#Web-Exploitation)
 
 # **Binary Exploitation**
 - [basic-file-exploit](./picoCTF_2022.md#basic-file-exploit)
+- [CVE-XXXX-XXXX](./picoCTF_2022.md#CVE-XXXX-XXXX)
 
 ## **basic-file-exploit**
 
@@ -50,6 +52,61 @@ picoCTF{M4K3_5UR3_70_CH3CK_Y0UR_1NPU75_25D6CDDB}
 ```
 
 Flag: `picoCTF{M4K3_5UR3_70_CH3CK_Y0UR_1NPU75_25D6CDDB}`
+
+## **CVE-XXXX-XXXX**
+
+### ***Description***
+Enter the CVE of the vulnerability as the flag with the correct flag format:
+`picoCTF{CVE-XXXX-XXXXX}` replacing XXXX-XXXXX with the numbers for the matching vulnerability. <br>
+The CVE we're looking for is the first recorded remote code execution (RCE) vulnerability in 2021 in the Windows Print Spooler Service, which is available across desktop and server versions of Windows operating systems. The service is used to manage printers and print servers.
+<details>
+    <summary>Hint 1</summary>
+    We're not looking for the Local Spooler vulnerability in 2021...
+</details>
+
+### ***Writeup***
+A quick Google search of "first recorded remote code execution (RCE) vulnerability in 2021 in the Windows Print Spooler Service" gives this [result](https://msrc.microsoft.com/update-guide/vulnerability/cve-2021-34527). Make sure that the Attack Vector is Network and not Local.
+
+Flag: `picoCTF{CVE-2021-34527}`
+
+# **Forensics**
+- [Enhance!](./picoCTF_2022.md#Enhance!)
+- [Lookey here](./picoCTF_2022.md#Lookey-here)
+
+## **Enhance!**
+
+### ***Description***
+Download this image file and find the flag. <br>
+- [Download image file](https://artifacts.picoctf.net/c/139/drawing.flag.svg)
+
+### ***Writeup***
+First I tried viewing the SVG using eog (Eye of Gnome), but sadly even after viewing the image under 2000x magnification I was unable to find anything at the center. Therefore, I tried another tool called InkScape, and viewed it under 25600x magnification. I was able to see something within the very tiny black dot at the center of the image, but I am unable to figure out what it is. I then opened the Document Properties menu (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd>) and changed the scale of the document from 1.0 to 0.1, which allowed me to see the flag.
+
+The alternative to getting the string is to cat the SVG and analyze every text and try to piece it together.
+
+![enhance](./Forensics/Enhance!/enhance.png)
+
+Flag: `picoCTF{3nh4nc3d_6783cc46}`
+
+## **Lookey here**
+
+### ***Description***
+Attackers have hidden information in a very large mass of data in the past, maybe they are still doing it. <br>
+Download the data [here](https://artifacts.picoctf.net/c/297/anthem.flag.txt).
+<details>
+    <summary>Hint 1</summary>
+    Download the file and search for the flag based on the known prefix.
+</details>
+
+### ***Writeup***
+`grep picoCTF{ anthem.flag.txt`
+
+```
+└─$ grep picoCTF{ anthem.flag.txt
+      we think that the men of picoCTF{gr3p_15_@w3s0m3_4554f5f5}
+```
+
+Flag: `picoCTF{gr3p_15_@w3s0m3_4554f5f5}`
 
 # **Cryptography**
 - [basic-mod1](./picoCTF_2022.md#basic-mod1)
