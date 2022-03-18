@@ -140,15 +140,13 @@ Wrap your answer with picoCTF{}, put underscores in place of pauses, and use all
 </details>
 
 ### ***Writeup***
-After analyzing the wav file using Audacity, I can see that the waveform is split by either short or long waves. The short ones are dots and the long ones are dashes.
-
+After analyzing the wav file using Audacity, I can see that the waveform is split by either short or long waves. The short ones are dots and the long ones are dashes. After writing down the morse code, I used an [online morse code translator](https://morsecode.world/international/translator.html) to convert the message.
 
 ![morse_code](./Cryptography/morse-code/morse_code.png)
 
 ```
 .-- .... ....- --... / .... ....- --... .... / ----. ----- -.. / .-- ..--- ----- ..- ----. .... --...
 ```
-
 morse code: `WH47 H47H 90D W20U9H7`
 
 ```
@@ -299,6 +297,7 @@ picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 - [Includes](./picoCTF_2022.md#Includes)
 - [Inspect HTML](./picoCTF_2022.md#Inspect-html)
 - [Local Authority](./picoCTF_2022.md#Local-Authority)
+- [Forbidden Paths](./picoCTF_2022.md#Forbidden-Paths)
 
 ## **Includes**
 
@@ -464,3 +463,17 @@ function checkPassword(username, password)
 </html>
 ```
 Flag: `picoCTF{j5_15_7r4n5p4r3n7_8086bcb1}`
+
+## **Forbidden Paths**
+
+### ***Description***
+Can you get the flag? <br>
+Here's the [website](http://saturn.picoctf.net:52523/). <br>
+We know that the website files live in `/usr/share/nginx/html/` and the flag is at `/flag.txt` but the website is filtering absolute file paths. Can you get past the filter to read the flag?
+
+### ***Writeup***
+On the webpage, notice that giving any of the filenames on the site (`divine-comedy.txt`, `oliver-twist.txt`, and `the-happy-prince.txt`) will print the contents of that file. For example, putting in `divine-comedy.txt` most likely will do `cat /usr/share/nginx/html/divine-comedy.txt`. Also notice that the first "file" on the list is `..`, and putting that in gives a blank page. This is a good thing, as it's trying to print the contents of `/usr/share/nginx/html/..`, which is just a directory.
+
+Giving the input `..` will go back one directory, so the webpage will print `/usr/share/nginx/`. Giving the input `../..` will print `/usr/share/`, `../../..` will print `/usr/`, `../../../..` will print `/`, and finally `../../../../flag.txt` will print the contents of `/flag.txt`. This type of attack is called a [path traversal attack](https://en.wikipedia.org/wiki/Directory_traversal_attack).
+
+Flag: `picoCTF{7h3_p47h_70_5ucc355_e73ad00d}`
