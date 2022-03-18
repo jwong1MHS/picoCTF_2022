@@ -459,6 +459,7 @@ Flag: `picoCTF{d3bugg3r_dr1v3_50e616ac}`
 - [Includes](./picoCTF_2022.md#Includes)
 - [Inspect HTML](./picoCTF_2022.md#Inspect-html)
 - [Local Authority](./picoCTF_2022.md#Local-Authority)
+- [Search source](./picoCTF_2022.md#Search-source)
 - [Forbidden Paths](./picoCTF_2022.md#Forbidden-Paths)
 
 ## **Includes**
@@ -625,6 +626,31 @@ function checkPassword(username, password)
 </html>
 ```
 Flag: `picoCTF{j5_15_7r4n5p4r3n7_8086bcb1}`
+
+## **Search source**
+
+### ***Description***
+The developer of this website mistakenly left an important artifact in the website source, can you find it? <br>
+The website is [here](http://saturn.picoctf.net:58519/)
+<details>
+    <summary>Hint 1</summary>
+    How could you mirror the website on your local machine so you could use more powerful tools for searching?
+</details>
+
+### ***Writeup***
+Download the website as well as the dependencies using `wget -r`, which will recursively download all the files. After running `wget -r http://saturn.picoctf.net:58519/`, running `grep -r picoCTF{ saturn.picoctf.net\:58519/` to recursively search in the cloned directory showed a match in the `css/styles.css` file.
+
+```
+└─$ wget -r http://saturn.picoctf.net:58519/
+```
+
+```
+└─$ grep -r picoCTF{ saturn.picoctf.net\:58519/
+saturn.picoctf.net:58519/css/style.css:/** banner_main picoCTF{1nsp3ti0n_0f_w3bpag3s_869d23af} **/
+```
+
+
+Flag: `picoCTF{1nsp3ti0n_0f_w3bpag3s_869d23af}`
 
 ## **Forbidden Paths**
 
