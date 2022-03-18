@@ -2,6 +2,7 @@
 - [Binary Exploitation](./picoCTF_2022.md#Binary-Exploitation)
 - [Cryptography](./picoCTF_2022.md#Cryptography)
 - [Forensics](./picoCTF_2022.md#Forensics)
+- [Reverse Engineering](./picoCTF_2022.md#Reverse-Engineering)
 - [Web Exploitation](./picoCTF_2022.md#Web-Exploitation)
 
 # **Binary Exploitation**
@@ -69,44 +70,6 @@ A quick Google search of "first recorded remote code execution (RCE) vulnerabili
 
 Flag: `picoCTF{CVE-2021-34527}`
 
-# **Forensics**
-- [Enhance!](./picoCTF_2022.md#Enhance)
-- [Lookey here](./picoCTF_2022.md#Lookey-here)
-
-## **Enhance!**
-
-### ***Description***
-Download this image file and find the flag. <br>
-- [Download image file](https://artifacts.picoctf.net/c/139/drawing.flag.svg)
-
-### ***Writeup***
-First I tried viewing the SVG using eog (Eye of Gnome), but sadly even after viewing the image under 2000x magnification I was unable to find anything at the center. Therefore, I tried another tool called InkScape, and viewed it under 25600x magnification. I was able to see something within the very tiny black dot at the center of the image, but I am unable to figure out what it is. I then opened the Document Properties menu (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd>) and changed the scale of the document from 1.0 to 0.1, which allowed me to see the flag.
-
-The alternative to getting the string is to cat the SVG and analyze every text and try to piece it together.
-
-![enhance](./Forensics/Enhance!/enhance.png)
-
-Flag: `picoCTF{3nh4nc3d_6783cc46}`
-
-## **Lookey here**
-
-### ***Description***
-Attackers have hidden information in a very large mass of data in the past, maybe they are still doing it. <br>
-Download the data [here](https://artifacts.picoctf.net/c/297/anthem.flag.txt).
-<details>
-    <summary>Hint 1</summary>
-    Download the file and search for the flag based on the known prefix.
-</details>
-
-### ***Writeup***
-Run `grep picoCTF{ anthem.flag.txt` in the terminal.
-
-```
-└─$ grep picoCTF{ anthem.flag.txt
-      we think that the men of picoCTF{gr3p_15_@w3s0m3_4554f5f5}
-```
-
-Flag: `picoCTF{gr3p_15_@w3s0m3_4554f5f5}`
 
 # **Cryptography**
 - [basic-mod1](./picoCTF_2022.md#basic-mod1)
@@ -348,7 +311,149 @@ output of `vigenere.py`:
 picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 ```
 
+# **Forensics**
+- [Enhance!](./picoCTF_2022.md#Enhance)
+- [Lookey here](./picoCTF_2022.md#Lookey-here)
 
+## **Enhance!**
+
+### ***Description***
+Download this image file and find the flag. <br>
+- [Download image file](https://artifacts.picoctf.net/c/139/drawing.flag.svg)
+
+### ***Writeup***
+First I tried viewing the SVG using eog (Eye of Gnome), but sadly even after viewing the image under 2000x magnification I was unable to find anything at the center. Therefore, I tried another tool called InkScape, and viewed it under 25600x magnification. I was able to see something within the very tiny black dot at the center of the image, but I am unable to figure out what it is. I then opened the Document Properties menu (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd>) and changed the scale of the document from 1.0 to 0.1, which allowed me to see the flag.
+
+The alternative to getting the string is to cat the SVG and analyze every text and try to piece it together.
+
+![enhance](./Forensics/Enhance!/enhance.png)
+
+Flag: `picoCTF{3nh4nc3d_6783cc46}`
+
+## **Lookey here**
+
+### ***Description***
+Attackers have hidden information in a very large mass of data in the past, maybe they are still doing it. <br>
+Download the data [here](https://artifacts.picoctf.net/c/297/anthem.flag.txt).
+<details>
+    <summary>Hint 1</summary>
+    Download the file and search for the flag based on the known prefix.
+</details>
+
+### ***Writeup***
+Run `grep picoCTF{ anthem.flag.txt` in the terminal.
+
+```
+└─$ grep picoCTF{ anthem.flag.txt
+      we think that the men of picoCTF{gr3p_15_@w3s0m3_4554f5f5}
+```
+
+Flag: `picoCTF{gr3p_15_@w3s0m3_4554f5f5}`
+
+# **Reverse Engineering**
+- [file-run1](./picoCTF_2022.md#file-run1)
+- [file-run2](./picoCTF_2022.md#file-run2)
+- [GDB Test Drive](./picoCTF_2022.md#GDB-Test-Drive)
+
+## **file-run1**
+
+### ***Description***
+A program has been provided to you, what happens if you try to run it on the command line? <br>
+Download the program [here](https://artifacts.picoctf.net/c/311/run).
+<details>
+    <summary>Hint 1</summary>
+    To run the program at all, you must make it executable (i.e. `$ chmod +x run`)
+</details>
+<details>
+    <summary>Hint 2</summary>
+    Try running it by adding a '.' in front of the path to the file (i.e. `$ ./run`)
+</details>
+
+### ***Writeup***
+Give permission to execute `run` (you might not need to do this):
+```
+└─$ chmod +x run
+```
+Execute the `run` program in the current directory:
+```
+└─$ ./run
+The flag is: picoCTF{U51N6_Y0Ur_F1r57_F113_102c30db}
+```
+
+Flag: `picoCTF{U51N6_Y0Ur_F1r57_F113_102c30db}`
+
+## **file-run2**
+
+### ***Description***
+Another program, but this time, it seems to want some input. What happens if you try to run it on the command line with input "Hello!"?
+Download the program [here](https://artifacts.picoctf.net/c/354/run).
+<details>
+    <summary>Hint 1</summary>
+    Try running it and add the phrase "Hello!" with a space in front (i.e. "./run Hello!")
+</details>
+
+### ***Writeup***
+Give permission to execute `run` and run the program with the argument "Hello!":
+```
+└─$ ./run Hello!
+The flag is: picoCTF{F1r57_4rgum3n7_4653b5f6}
+```
+
+Flag: `picoCTF{F1r57_4rgum3n7_4653b5f6}`
+
+## **GDB Test Drive**
+
+### ***Description***
+Can you get the flag? <br>
+Download this binary. <br>
+Here's the test drive instructions:
+- `$ chmod +x gdbme`
+- `$ gdb gdbme`
+- `(gdb) layout asm`
+- `(gdb) break *(main+99)`
+- `(gdb) run`
+- `(gdb) jump *(main+104)`
+
+### ***Writeup***
+Give permission to execute `gdbme` and run gdb on `gdbme`. Bring out the assembly code layout, set a breakpoint at the sleep call in the main function at address `(main+99)`, run the program which will stop at the sleep call, and the jump to the next instruction. What the gdb instructions are doing is it's jumping over the infinite sleep, whereas running the program normally will just have it be stuck on the sleep.
+
+```
+┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
+│   0x5555555552c7 <main>           endbr64                                                                                         │
+│   0x5555555552cb <main+4>         push   %rbp                                                                                     │
+│   0x5555555552cc <main+5>         mov    %rsp,%rbp                                                                                │
+│   0x5555555552cf <main+8>         sub    $0x50,%rsp                                                                               │
+│   0x5555555552d3 <main+12>        mov    %edi,-0x44(%rbp)                                                                         │
+│   0x5555555552d6 <main+15>        mov    %rsi,-0x50(%rbp)                                                                         │
+│   0x5555555552da <main+19>        mov    %fs:0x28,%rax                                                                            │
+│   0x5555555552e3 <main+28>        mov    %rax,-0x8(%rbp)                                                                          │
+│   0x5555555552e7 <main+32>        xor    %eax,%eax                                                                                │
+│   0x5555555552e9 <main+34>        movabs $0x4c75257240343a41,%rax                                                                 │
+│   0x5555555552f3 <main+44>        movabs $0x4362383846336235,%rdx                                                                 │
+│   0x5555555552fd <main+54>        mov    %rax,-0x30(%rbp)                                                                         │
+│   0x555555555301 <main+58>        mov    %rdx,-0x28(%rbp)                                                                         │
+│   0x555555555305 <main+62>        movabs $0x6430624760433530,%rax                                                                 │
+│   0x55555555530f <main+72>        movabs $0x4e3432656065365f,%rdx                                                                 │
+│   0x555555555319 <main+82>        mov    %rax,-0x20(%rbp)                                                                         │
+│   0x55555555531d <main+86>        mov    %rdx,-0x18(%rbp)                                                                         │
+│   0x555555555321 <main+90>        movb   $0x0,-0x10(%rbp)                                                                         │
+│   0x555555555325 <main+94>        mov    $0x186a0,%edi                                                                            │
+│B+ 0x55555555532a <main+99>        call   0x555555555110 <sleep@plt>                                                               │
+└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
+native No process In:                                                                                                   L??   PC: ?? 
+(gdb) break *(main+99)
+Breakpoint 1 at 0x132a
+(gdb) run
+Starting program: /mnt/c/Users/jason/Documents/GitHub/picoCTF_2022/Reverse_Engineering/GDB_Test_Drive/gdbme
+
+Breakpoint 1, 0x000055555555532a in main ()
+(gdb) jump *(main+104)
+Continuing at 0x55555555532f.
+picoCTF{d3bugg3r_dr1v3_50e616ac}
+(gdb) ior 1 (process 16883) exited normally]
+```
+
+Flag: `picoCTF{d3bugg3r_dr1v3_50e616ac}`
 
 # **Web Exploitation**
 - [Includes](./picoCTF_2022.md#Includes)
