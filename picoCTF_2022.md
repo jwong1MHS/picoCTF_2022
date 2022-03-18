@@ -209,7 +209,8 @@ Download the message [here](https://artifacts.picoctf.net/c/107/message.txt).
 Make a [python script](./Cryptography/substitution2/substitution2.py) and slowly replace letters. It started with knowing that the last sentence should have the string `picoCTF{` to knowing that the sentence should include `theflagispicoCTF{`, and then guessing what some of the words might be using context clues. It was a lot of replacing letter by letter.
 
 `message.txt`:
-```└─$ cat message.txt
+```
+└─$ cat message.txt
 gvjwjjoeugujajwqxzgvjwkjxxjugqfxeuvjivecvumvzzxmzbpsgjwujmswegrmzbpjgegezhuehmxsiehcmrfjwpqgwezgqhisumrfjwmvqxxjhcjgvjujmzbpjgegezhunzmsupwebqwexrzhurugjbuqibeheugwqgezhnshiqbjhgqxukvemvqwjajwrsujnsxqhibqwdjgqfxjudexxuvzkjajwkjfjxejajgvjpwzpjwpswpzujznqvecvumvzzxmzbpsgjwujmswegrmzbpjgegezheuhzgzhxrgzgjqmvaqxsqfxjudexxufsgqxuzgzcjgugsijhguehgjwjugjiehqhijomegjiqfzsgmzbpsgjwumejhmjijnjhueajmzbpjgegezhuqwjzngjhxqfzwezsuqnnqewuqhimzbjizkhgzwshhehcmvjmdxeuguqhijojmsgehcmzhnecumwepguznnjhujzhgvjzgvjwvqhieuvjqaexrnzmsujizhjopxzwqgezhqhiebpwzaeuqgezhqhizngjhvqujxjbjhguznpxqrkjfjxejajqmzbpjgegezhgzsmvehczhgvjznnjhueajjxjbjhguznmzbpsgjwujmswegreugvjwjnzwjqfjggjwajvemxjnzwgjmvjaqhcjxeubgzugsijhguehqbjwemqhvecvumvzzxunswgvjwkjfjxejajgvqgqhshijwugqhiehcznznnjhueajgjmvhelsjueujuujhgeqxnzwbzshgehcqhjnnjmgeajijnjhujqhigvqggvjgzzxuqhimzhnecswqgezhnzmsujhmzshgjwjiehijnjhueajmzbpjgegezhuizjuhzgxjqiugsijhgugzdhzkgvjewjhjbrqujnnjmgeajxrqugjqmvehcgvjbgzqmgeajxrgvehdxedjqhqggqmdjwpemzmgneuqhznnjhueajxrzwejhgjivecvumvzzxmzbpsgjwujmswegrmzbpjgegezhgvqgujjdugzcjhjwqgjehgjwjugehmzbpsgjwumejhmjqbzhcvecvumvzzxjwugjqmvehcgvjbjhzscvqfzsgmzbpsgjwujmswegrgzpelsjgvjewmswezuegrbzgeaqgehcgvjbgzjopxzwjzhgvjewzkhqhijhqfxehcgvjbgzfjggjwijnjhigvjewbqmvehjugvjnxqceupemzMGN{H6W4B_4H41R515_15_73I10S5_8J1FN808}
 ```
 output of `substitution2.py`:
@@ -219,6 +220,32 @@ thereexistseveralotherwellestablishedhighschoolcomputersecuritycompetitionsinclu
 ```
 
 Flag: `picoCTF{N6R4M_4N41Y515_15_73D10U5_8E1BF808}`
+
+## **Vigenere**
+
+### ***Description***
+Can you decrypt this message?
+Decrypt this [message](https://artifacts.picoctf.net/c/527/cipher.txt) using this key "CYLAB".
+<details>
+    <summary>Hint 1</summary>
+    https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
+</details>
+
+### ***Writeup***
+Make a [python script](./Cryptography/Vigenere/vigenere.py) that will do the Vigenere Cipher. Used the [geeksforgeeks](https://www.geeksforgeeks.org/vigenere-cipher/) page for code reference and [dcode.fr](https://www.dcode.fr/vigenere-cipher) to verify.
+
+`message.txt`:
+```
+└─$ cat cipher.txt
+rgnoDVD{O0NU_WQ3_G1G3O3T3_A1AH3S_cc82272b}
+```
+output of `vigenere.py`:
+```
+└─$ python3 vigenere.py cipher.txt CYLAB
+picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_ae82272q}
+```
+
+
 
 # **Web Exploitation**
 - [Includes](./picoCTF_2022.md#includes)
