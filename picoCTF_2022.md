@@ -70,7 +70,7 @@ A quick Google search of "first recorded remote code execution (RCE) vulnerabili
 Flag: `picoCTF{CVE-2021-34527}`
 
 # **Forensics**
-- [Enhance!](./picoCTF_2022.md#Enhance!)
+- [Enhance!](./picoCTF_2022.md#Enhance)
 - [Lookey here](./picoCTF_2022.md#Lookey-here)
 
 ## **Enhance!**
