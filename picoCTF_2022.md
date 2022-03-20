@@ -160,6 +160,7 @@ Flag: `picoCTF{CVE-2021-34527}`
 - [substitution0](./picoCTF_2022.md#substitution0)
 - [substitution1](./picoCTF_2022.md#substitution1)
 - [substitution2](./picoCTF_2022.md#substitution2)
+- [transposition-trial](./picoCTF_2022.md#transposition-trial)
 - [Vigenere](./picoCTF_2022.md#vigenere)
 
 ## **basic-mod1**
@@ -440,6 +441,26 @@ thereexistseveralotherwellestablishedhighschoolcomputersecuritycompetitionsinclu
 ```
 
 Flag: `picoCTF{N6R4M_4N41Y515_15_73D10U5_8E1BF808}`
+
+## **transposition-trial**
+
+### ***Description***
+Our data got corrupted on the way here. Luckily, nothing got replaced, but every block of 3 got scrambled around! The first word seems to be three letters long, maybe you can use that to recover the rest of the message. <br>
+Download the corrupted message [here](https://artifacts.picoctf.net/c/459/message.txt).
+<details>
+    <summary>Hint 1</summary>
+    Split the message up into blocks of 3 and see how the first block is scrambled
+</details>
+
+### ***Writeup***
+Analyzing the corrupted message it seems that for every block of three characters, the first characters is moved to the end (so instead of 1 2 3 it got corrupted to 2 3 1). Make a [python script](./Cryptography/transposition-trial/transposition-trial.py) that will check every third character and move it two places back.
+
+```
+└─$ python3 transposition-trial.py
+The flag is picoCTF{7R4N5P051N6_15_3XP3N51V3_5C82A0E0}
+```
+
+Flag: `picoCTF{7R4N5P051N6_15_3XP3N51V3_5C82A0E0}`
 
 ## **Vigenere**
 
