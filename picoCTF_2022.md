@@ -547,6 +547,7 @@ picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 - [Lookey here](./picoCTF_2022.md#Lookey-here)
 - [Packets Primer](./picoCTF_2022.md#Packets-Primer)
 - [Redaction gone wrong](./picoCTF_2022.md#Redaction-gone-wrong)
+- [Sleuthkit Intro](./picoCTF_2022.md#Sleuthkit-Intro)
 
 ## **Enhance!**
 
@@ -790,6 +791,45 @@ Redacted document.
 ```
 
 Flag: `picoCTF{C4n_Y0u_S33_m3_fully}`
+
+## **Sleuthkit Intro**
+
+### ***Description***
+Download the disk image and use `mmls` on it to find the size of the Linux partition. Connect to the remote checker service to check your answer and get the flag. <br>
+Note: if you are using the webshell, download and extract the disk image into `/tmp` not your home directory. <br>
+- [Download disk image](https://artifacts.picoctf.net/c/114/disk.img.gz)
+- Access checker program: `nc saturn.picoctf.net 52279`
+
+### ***Writeup***
+
+Not much to this challenge. Just extract the file and run `mmls` on it.
+```
+└─$ gunzip -v disk.img.gz
+disk.img.gz:     71.7% -- replaced with disk.img
+```
+
+```
+└─$ mmls disk.img
+DOS Partition Table
+Offset Sector: 0
+Units are in 512-byte sectors
+
+      Slot      Start        End          Length       Description
+000:  Meta      0000000000   0000000000   0000000001   Primary Table (#0)
+001:  -------   0000000000   0000002047   0000002048   Unallocated
+002:  000:000   0000002048   0000204799   0000202752   Linux (0x83)
+```
+
+```
+└─$ nc saturn.picoctf.net 52279
+What is the size of the Linux partition in the given disk image?
+Length in sectors: 202752
+202752
+Great work!
+picoCTF{mm15_f7w!}
+```
+
+Flag: `picoCTF{mm15_f7w!}`
 
 # **Reverse Engineering**
 - [file-run1](./picoCTF_2022.md#file-run1)
