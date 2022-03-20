@@ -836,6 +836,9 @@ Flag: `picoCTF{mm15_f7w!}`
 - [file-run2](./picoCTF_2022.md#file-run2)
 - [GDB Test Drive](./picoCTF_2022.md#GDB-Test-Drive)
 - [patchme.py](./picoCTF_2022.md#patchme.py)
+- [Safe Opener](./picoCTF_2022.md#Safe-Opener)
+- [unpackme.py](./picoCTF_2022.md#unpackme.py)
+- [bloat.py](./picoCTF_2022.md#unpackme.py)
 
 ## **file-run1**
 
@@ -978,15 +981,62 @@ Type "help", "copyright", "credits" or "license" for more information.
 >>> base64.b64decode(encodedkey.encode('ascii')).decode('ascii')
 'pl3as3_l3t_m3_1nt0_th3_saf3'
 ```
-After getting the password, pass it back into the program to verify it's correct:
-```
-└─$ java SafeOpener.java
-Enter password for the safe: pl3as3_l3t_m3_1nt0_th3_saf3
-cGwzYXMzX2wzdF9tM18xbnQwX3RoM19zYWYz
-Sesame open
-```
 
 Flag: `picoCTF{pl3as3_l3t_m3_1nt0_th3_saf3}`
+
+## **unpackme.py**
+
+### ***Description***
+Can you get the flag? <br>
+Reverse engineer this [Python program](https://artifacts.picoctf.net/c/467/unpackme.flag.py).
+
+### ***Writeup***
+First install the cryptography python library so that you can run the pythong program using `pip install cryptography`. Then, copy the contents of `unpackme.flag.py` to a new python file, except replace the last line of `exec(plain.decode())` to `print(plain.decode())` to see what the program is trying to execute.
+
+```
+└─$ python3 unpackme.py
+
+pw = input('What\'s the password? ')
+
+if pw == 'batteryhorse':
+  print('picoCTF{175_chr157m45_188ab8c9}')
+else:
+  print('That password is incorrect.')
+```
+
+Flag: `picoCTF{175_chr157m45_188ab8c9}`
+
+## **bloat.py**
+
+### ***Description***
+Can you get the flag? <br>
+Run this [Python program](https://artifacts.picoctf.net/c/431/bloat.flag.py) in the same directory as this [encrypted flag](https://artifacts.picoctf.net/c/431/flag.txt.enc).
+
+### ***Writeup***
+Looking at the python code for `bloat.flag.py` made me want to vomit, so I decided to create another python program called `bloat.py` that will replace the character concatenations with a whole string. I used python to do the job instead of looking up every index in `a`. Result looks like [this](./Reverse_Engineering/bloat.py/bloat.py).
+
+```
+└─$ python3
+Python 3.9.10 (main, Feb 22 2022, 13:54:07)
+[GCC 11.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> a = "!\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ"+ \
+     "[...             "[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~ "
+>>> a[71]+a[64]+a[79]+a[79]+a[88]+a[66]+a[71]+a[64]+a[77]+a[66]+a[68]
+'happychance'
+...
+```
+
+It seems that the program takes user input and stores it as arg432, and passes that into function arg133 and checks if the input matches the string `happychance`. If it does then the function returns True and continues and prints the flag.
+
+```
+└─$ python3 bloat.flag.py
+Please enter correct password for flag: happychance
+Welcome back... your flag, user:
+picoCTF{d30bfu5c4710n_f7w_2769cf94}
+```
+
+Flag: `picoCTF{d30bfu5c4710n_f7w_2769cf94}`
 
 # **Web Exploitation**
 - [Includes](./picoCTF_2022.md#Includes)
