@@ -243,6 +243,15 @@ The first user in `usernames.txt` corresponds to the first password in `password
 
 ### ***Writeup***
 
+First thing to do is extract the tar file using `tar -xvf leak.tar` and then change directory into the extracted folder.
+
+```
+└─$ tar -xvf leak.tar
+leak/
+leak/passwords.txt
+leak/usernames.txt
+```
+
 Use `grep -n` to not only find the user `cultiris` in `usernames.txt`, but also the line number of that user in the text file (this only works if the first user and the first password is on line 1 of their respective files).
 
 ```
@@ -458,6 +467,7 @@ picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 
 # **Forensics**
 - [Enhance!](./picoCTF_2022.md#Enhance)
+- [File types](./picoCTF_2022.md#File-types)
 - [Lookey here](./picoCTF_2022.md#Lookey-here)
 - [Packets Primer](./picoCTF_2022.md#Packets-Primer)
 
@@ -481,7 +491,7 @@ Starting InkScape on `drawing.flag.svg`:
 
 Flag: `picoCTF{3nh4nc3d_6783cc46}`
 
-<!-- ## **File types**
+## **File types**
 
 ### ***Description***
 This file was found among some files marked confidential but my pdf reader cannot read it, maybe yours can. <br>
@@ -508,49 +518,122 @@ Flag.pdf: shell archive text
 #
 ...
 ```
-At first, running `sh Flag.pdf` did nothing because it was missing the `uudecode` dependency, so I had to install it in the `sharutils` package.  
-```
-└─$ sh Flag.pdf
-x - created lock directory _sh00048.
-x - extracting flag (text)
-Flag.pdf: 119: uudecode: not found
-restore of flag failed
-flag: MD5 check failed
-x - removed lock directory _sh00048.
-```
-```
-└─$ sudo apt install sharutils
-```
 
-Running `sh Flag.pdf` again turned successful, and checking the current directory there is a new file there called `flag`.
+Running `sh Flag.pdf` will extract a file to the current directory called `flag`. If extracting errors and says `uudecode: not found`, install `sharutils` package using `sudo apt install sharutils`.
+
 ```
 └─$ sh Flag.pdf
 x - created lock directory _sh00048.
 x - extracting flag (text)
 x - removed lock directory _sh00048.
 ```
+
 ```
-└─$ ls
-flag  Flag.pdf
+└─$ file *
+flag:     current ar archive
+Flag.pdf: shell archive text
 ```
 
-Passing the `file` command on it shows that it is a ar archive. Therefore, run `ar xv flag` to extract the contents of the archives (x) as well as list name of each member which is extracted (v).
+The rest of this is really tedious and extracting nested files.
+
 ```
-└─$ file flag
-flag: current ar archive
-```
-```
-└─$ ar xv flag
+└─$ ar -xv flag && file *
 x - flag
+flag:     cpio archive
+Flag.pdf: shell archive text
 ```
 
-Checking the file type of `flag` again shows that now it is of type `cpio`
 ```
-└─$ file flag
-flag: cpio archive
+└─$ cpio -iuv < flag && file *
+flag
+2 blocks
+flag:     bzip2 compressed data, block size = 900k
+Flag.pdf: shell archive text
 ```
 
-Flag:  -->
+```
+└─$ bzip2 -dv flag && file *
+bzip2: Can't guess original name for flag -- using flag.out
+  flag:    done
+flag.out: gzip compressed data, was "flag", last modified: Tue Mar 15 06:50:44 2022, from Unix, original size modulo 2^32 327
+Flag.pdf: shell archive text
+```
+
+```
+└─$ gunzip -vS .out flag.out && file *
+flag.out:        -1.5% -- replaced with flag
+flag:     lzip compressed data, version: 1
+Flag.pdf: shell archive text
+```
+
+Have to install using `sudo apt install lzip`:
+```
+└─$ lzip -dv flag && file *
+lzip: Can't guess original name for 'flag' -- using 'flag.out'
+  flag: done
+flag.out: LZ4 compressed data (v1.4+)
+Flag.pdf: shell archive text
+```
+
+Have to install using `sudo apt install lz4`
+```
+└─$ unlz4 -v flag.out flag && mv flag flag.out && file *
+*** LZ4 command line interface 64-bits v1.9.3, by Yann Collet ***
+flag.out             : decoded 264 bytes
+flag.out: LZMA compressed data, non-streamed, size 253
+Flag.pdf: shell archive text
+```
+
+```
+└─$ unlzma -vS .out flag.out && file *
+flag.out (1/1)
+  100 %               264 B / 253 B = 1.043
+flag:     lzop compressed data - version 1.040, LZO1X-1, os: Unix
+Flag.pdf: shell archive text
+```
+
+Have to install using `sudo apt install lzop`
+```
+└─$ lzop -dvff flag && file *
+decompressing flag into flag.raw
+flag:     lzop compressed data - version 1.040, LZO1X-1, os: Unix
+Flag.pdf: shell archive text
+flag.raw: lzip compressed data, version: 1
+```
+
+```
+└─$ lzip -dv flag.raw && file *
+lzip: Can't guess original name for 'flag.raw' -- using 'flag.raw.out'
+  flag.raw: done
+flag:         lzop compressed data - version 1.040, LZO1X-1, os: Unix
+Flag.pdf:     shell archive text
+flag.raw.out: XZ compressed data, checksum CRC64
+```
+
+```
+└─$ unxz -vS .out flag.raw.out && file *
+flag.raw.out (1/1)
+  100 %               152 B / 110 B = 1.382
+flag:     lzop compressed data - version 1.040, LZO1X-1, os: Unix
+Flag.pdf: shell archive text
+flag.raw: ASCII text
+```
+
+Finally reached the end after 10 decompressions (I hate this). Printing teh contents of the flag.raw ASCII text file shows this:
+```
+└─# cat flag.raw
+7069636f4354467b66316c656e406d335f6d406e3170756c407431306e5f
+6630725f3062326375723137795f33343765616536357d0a
+```
+
+All of that and it's still not the flag?? Looking at the string carefully though, every character is from 0-f, so it's most likely in hex. Converting from hex to ASCII should give the correct flag.
+
+```
+└─$ cat flag.raw | xxd -r -p
+picoCTF{f1len@m3_m@n1pul@t10n_f0r_0b2cur17y_347eae65}
+```
+
+Flag: `picoCTF{f1len@m3_m@n1pul@t10n_f0r_0b2cur17y_347eae65}`
 
 ## **Lookey here**
 
