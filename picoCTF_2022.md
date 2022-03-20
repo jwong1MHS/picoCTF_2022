@@ -95,24 +95,17 @@ I am going to write 16 A's into `input.txt` and feed it into the vuln program to
 Input: The program will exit now
 ```
 
-As expected, nothing much and the program exits nicely. Time to use GDB! Reason why I am using multiple A's is because since A is 0x41, I just have to look multiple occurences of 0x41 in the stack.
-
-```
-└─$ python3 -c "print('A'*16)" > input.txt && ./vuln < input.txt
-Input: The program will exit now
-```
-
-Run `gdb vuln` and then `layout asm` to get the assembly as well as the debugger console. If you are using `layout asm`, the memory addresses displayed may not be correct (not sure why). For example, it might say main starts at address 0x1382, which is incorrect. I recommend running the program once to display the correct addresses, so main should start at 0x56556382.
+As expected, nothing much and the program exits nicely. Time to use GDB! Reason why I am using multiple A's is because since A is 0x41, I just have to look multiple occurences of 0x41 in the stack. Run `gdb vuln` and then `layout asm` to get the assembly as well as the debugger console. If you are using `layout asm`, the memory addresses displayed may not be correct (not sure why). For example, it might say main starts at address 0x1382, which is incorrect. I recommend running the program once to display the correct addresses, so main should start at 0x56556382.
 
 Correct memory addresses:
 ![after_layout_asm](Binary_Exploitation/buffer_overflow_0/after_layout_asm.png)
 
-Since `strcpy` is in the strcpy function, I am going to analyze the assembly at that section by doing `disas vuln`. The `strcpy` function is called at address  0x56556374, so I will set a breakpoint at the address right after the call by doing `b *0x56556379` so I can analyze the stack. Time to run the program once with `input.txt` by doing `r < input.txt` and see what the stack looks like.
+Since `strcpy` is in the vuln function, I am going to analyze the assembly at that section by doing `disas vuln`. The `strcpy` function is called at address  0x56556374, so I will set a breakpoint at the address right after the call by doing `b *0x56556379` so I can analyze the stack. Time to run the program once with `input.txt` by doing `r < input.txt` and see what the stack looks like.
 
 The first 64 bytes of sp register:
 ![sp_with_16A](Binary_Exploitation/buffer_overflow_0/sp_with_16A.png)
 
-I can see that `buf2` starts at address 0xffffd048 because that's where the 0x41 starts to appear. I also notice that at 0xffffd054 there is something stored there. Running `info frame` shows that `ebx` is stored there, which currently has the contents of `eax` as shown from address 0x56556372.
+I can see that `buf2` starts at address 0xffffd048 because that's where the 0x41 starts to appear. I also notice that at 0xffffd054 there is something stored there. Running `info frame` shows that `ebx` is stored there, which currently has the contents of `eax` as shown from the instruction at address 0x56556372.
 
 Frame info at the breakpoint after strcpy:
 ![ebx_register_location](Binary_Exploitation/buffer_overflow_0/ebx_register_location.png)
@@ -162,6 +155,7 @@ Flag: `picoCTF{CVE-2021-34527}`
 - [basic-mod1](./picoCTF_2022.md#basic-mod1)
 - [basic-mod2](./picoCTF_2022.md#basic-mod2)
 - [morse-code](./picoCTF_2022.md#morse-code)
+- [rail-fence](./picoCTF_2022.md#rail-fence)
 - [substitution0](./picoCTF_2022.md#substitution0)
 - [substitution1](./picoCTF_2022.md#substitution1)
 - [substitution2](./picoCTF_2022.md#substitution2)
@@ -271,6 +265,29 @@ Type "help", "copyright", "credits" or "license" for more information.
 ```
 
 Flag: `picoCTF{wh47_h47h_90d_w20u9h7}`
+
+## **rail-fence**
+
+### ***Description***
+A type of transposition cipher is the rail fence cipher, which is described [here](https://en.wikipedia.org/wiki/Rail_fence_cipher). Here is one such cipher encrypted using the rail fence with 4 rails. Can you decrypt it? <br>
+Download the message [here](https://artifacts.picoctf.net/c/275/message.txt). <br>
+Put the decoded message in the picoCTF flag format, `picoCTF{decoded_message}`.
+<details>
+    <summary>Hint 1</summary>
+    Once you've understood how the cipher works, it's best to draw it out yourself on paper
+</details>
+
+### ***Writeup***
+It is really tedious to do by hand since you have to take into account of padding the plaintext, so it is better to use an online cracking tool such as the one [here](https://www.boxentriq.com/code-breaking/rail-fence-cipher). Giving 4 rails should give a result.
+
+```
+T     a           _     7     N     6     D     E     7
+ h   l g   : W   3 D   _ H   3 C   3 1   N _   _ B   D 4
+  e f     s   H R   0 5   3 F   3 8   N 4   3 D   4 7
+         i     3     3     _     _     _     N     C
+```
+
+Flag: `picoCTF{WH3R3_D035_7H3_F3NC3_8361N_4ND_3ND_EB4C7D74}`
 
 ## **substitution0**
 
