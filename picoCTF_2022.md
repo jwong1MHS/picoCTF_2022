@@ -548,6 +548,7 @@ picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 - [Packets Primer](./picoCTF_2022.md#Packets-Primer)
 - [Redaction gone wrong](./picoCTF_2022.md#Redaction-gone-wrong)
 - [Sleuthkit Intro](./picoCTF_2022.md#Sleuthkit-Intro)
+- [St3g0](./picoCTF_2022.md#St3g0)
 
 ## **Enhance!**
 
@@ -830,6 +831,40 @@ picoCTF{mm15_f7w!}
 ```
 
 Flag: `picoCTF{mm15_f7w!}`
+
+## **St3g0**
+
+### ***Description***
+Download this image and find the flag. <br>
+- [Download image](https://artifacts.picoctf.net/c/424/pico.flag.png)
+<details>
+    <summary>Hint 1</summary>
+    We know the end sequence of the message will be `$t3g0`.
+</details>
+
+### ***Writeup***
+Use a steganography detection tool like zsteg, which you can get by running `sudo apt install ruby-dev` then `gem install zsteg`. Running zsteg on the png file shows the following on the console.
+
+```
+└─$ zsteg pico.flag.png
+b1,r,lsb,xy         .. text: "~__B>+g?G@"
+b1,rgb,lsb,xy       .. text: "picoCTF{7h3r3_15_n0_5p00n_1b8d71db}$t3g0"
+b1,abgr,lsb,xy      .. text: "E2A5q4E%uSA"
+b2,b,lsb,xy         .. text: "AAPAAQTAAA"
+b2,b,msb,xy         .. text: "HWUUUUUU"
+b2,a,lsb,xy         .. file: Matlab v4 mat-file (little endian) >\004<\305P, numeric, rows 0, columns 0
+b2,a,msb,xy         .. file: Matlab v4 mat-file (little endian) | <\243, numeric, rows 0, columns 0
+b3,r,lsb,xy         .. file: gfxboot compiled html help file
+b4,r,lsb,xy         .. file: Targa image data (16-273) 65536 x 4097 x 1 +4352 +4369 - 1-bit alpha - right "\021\020\001\001\021\021\001\001\021\021\001"
+b4,g,lsb,xy         .. file: 0420 Alliant virtual executable not stripped
+b4,b,lsb,xy         .. file: Targa image data - Map 272 x 17 x 16 +257 +272 - 1-bit alpha "\020\001\021\001\021\020\020\001\020\001\020\001"
+b4,bgr,lsb,xy       .. file: Targa image data - Map 273 x 272 x 16 +1 +4113 - 1-bit alpha "\020\001\001\001"
+b4,rgba,lsb,xy      .. file: Novell LANalyzer capture file
+b4,rgba,msb,xy      .. file: Applesoft BASIC program data, first line number 8
+b4,abgr,lsb,xy      .. file: Novell LANalyzer capture file
+```
+
+Flag: `picoCTF{7h3r3_15_n0_5p00n_1b8d71db}`
 
 # **Reverse Engineering**
 - [file-run1](./picoCTF_2022.md#file-run1)
