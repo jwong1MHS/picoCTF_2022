@@ -835,10 +835,10 @@ Flag: `picoCTF{mm15_f7w!}`
 - [file-run1](./picoCTF_2022.md#file-run1)
 - [file-run2](./picoCTF_2022.md#file-run2)
 - [GDB Test Drive](./picoCTF_2022.md#GDB-Test-Drive)
-- [patchme.py](./picoCTF_2022.md#patchme.py)
+- [patchme.py](./picoCTF_2022.md#patchmepy)
 - [Safe Opener](./picoCTF_2022.md#Safe-Opener)
-- [unpackme.py](./picoCTF_2022.md#unpackme.py)
-- [bloat.py](./picoCTF_2022.md#unpackme.py)
+- [unpackme.py](./picoCTF_2022.md#unpackmepy)
+- [bloat.py](./picoCTF_2022.md#bloatpy)
 
 ## **file-run1**
 
