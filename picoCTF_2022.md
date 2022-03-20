@@ -154,6 +154,7 @@ Flag: `picoCTF{CVE-2021-34527}`
 # **Cryptography**
 - [basic-mod1](./picoCTF_2022.md#basic-mod1)
 - [basic-mod2](./picoCTF_2022.md#basic-mod2)
+- [credstuff](./picoCTF_2022.md#credstuff)
 - [morse-code](./picoCTF_2022.md#morse-code)
 - [rail-fence](./picoCTF_2022.md#rail-fence)
 - [substitution0](./picoCTF_2022.md#substitution0)
@@ -225,6 +226,42 @@ output of `basic_mod2.py`:
 ```
 └─$ python3 basic_mod2.py
 picoCTF{1NV3R53LY_H4RD_C680BDC1}
+```
+
+Flag: `picoCTF{1NV3R53LY_H4RD_C680BDC1}`
+
+## **credstuff**
+
+### ***Description***
+We found a leak of a blackmarket website's login credentials. Can you find the password of the user `cultiris` and successfully decrypt it? <br>
+Download the leak [here](https://artifacts.picoctf.net/c/534/leak.tar). <br>
+The first user in `usernames.txt` corresponds to the first password in `passwords.txt`. The second user corresponds to the second password, and so on.
+<details>
+    <summary>Hint 1</summary>
+    Maybe other passwords will have hints about the leak?
+</details>
+
+### ***Writeup***
+
+Use `grep -n` to not only find the user `cultiris` in `usernames.txt`, but also the line number of that user in the text file (this only works if the first user and the first password is on line 1 of their respective files).
+
+```
+└─$ grep -n cultiris usernames.txt
+378:cultiris
+```
+
+Then, use `sed -n NUMp`, where NUM is the line number, and `p` to print the contents at that line number.
+
+```
+└─$ sed -n '378p' < passwords.txt
+cvpbPGS{P7e1S_54I35_71Z3}
+```
+
+This looks like the flag, but isn't the flag since it does not start with picoCTF. It is actually encrypted in ROT13, so the last step is to transform the password.
+
+```
+└─$ sed -n '378p' < passwords.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
+picoCTF{C7r1F_54V35_71M3}
 ```
 
 Flag: `picoCTF{1NV3R53LY_H4RD_C680BDC1}`
