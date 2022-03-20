@@ -7,6 +7,7 @@
 
 # **Binary Exploitation**
 - [basic-file-exploit](./picoCTF_2022.md#basic-file-exploit)
+- [buffer-overflow-0](./picoCTF_2022.md#buffer-overflow-0)
 - [CVE-XXXX-XXXX](./picoCTF_2022.md#CVE-XXXX-XXXX)
 
 ## **basic-file-exploit**
@@ -87,7 +88,14 @@ Attempting to execute vuln shows that it needs a `flag.txt`, so I created a new 
 picoCTF{random_string}
 ```
 
-Time to use gdb! I am going to write 16 A's into `input.txt`. Reason why I am using multiple A's is because since A is 0x41, I just have to look multiple occurences of 0x41 in the stack.
+I am going to write 16 A's into `input.txt` and feed it into the vuln program to see what happens.
+
+```
+└─$ python3 -c "print('A'*16)" > input.txt && ./vuln < input.txt
+Input: The program will exit now
+```
+
+As expected, nothing much and the program exits nicely. Time to use GDB! Reason why I am using multiple A's is because since A is 0x41, I just have to look multiple occurences of 0x41 in the stack.
 
 ```
 └─$ python3 -c "print('A'*16)" > input.txt && ./vuln < input.txt
@@ -116,7 +124,7 @@ I am going to try and corrupt ebx register and possibly create a segmentation fa
 Input: picoCTF{random_string}
 ```
 
-As expected, something got correupt which outputted the contents of `flag`. Let's see what happened on the assembly scale.
+As expected, something was corrupt which outputted the contents of `flag`. Let's see what happened on the assembly scale.
 
 ![corrupt_sp](Binary_Exploitation/buffer_overflow_0/corrupt_sp.png)
 
