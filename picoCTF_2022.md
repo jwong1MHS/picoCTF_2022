@@ -839,6 +839,7 @@ Flag: `picoCTF{mm15_f7w!}`
 - [Safe Opener](./picoCTF_2022.md#Safe-Opener)
 - [unpackme.py](./picoCTF_2022.md#unpackmepy)
 - [bloat.py](./picoCTF_2022.md#bloatpy)
+- [Fresh Java](./picoCTF_2022.md#Fresh-Java)
 
 ## **file-run1**
 
@@ -982,6 +983,14 @@ Type "help", "copyright", "credits" or "license" for more information.
 'pl3as3_l3t_m3_1nt0_th3_saf3'
 ```
 
+After getting the password, pass it back into the program to verify it is correct:
+```
+└─$ java SafeOpener.java
+Enter password for the safe: pl3as3_l3t_m3_1nt0_th3_saf3
+cGwzYXMzX2wzdF9tM18xbnQwX3RoM19zYWYz
+Sesame open
+```
+
 Flag: `picoCTF{pl3as3_l3t_m3_1nt0_th3_saf3}`
 
 ## **unpackme.py**
@@ -1002,6 +1011,13 @@ if pw == 'batteryhorse':
   print('picoCTF{175_chr157m45_188ab8c9}')
 else:
   print('That password is incorrect.')
+```
+
+After getting the password, pass it back into the program to verify it is correct:
+```
+└─$ python3 unpackme.flag.py
+What's the password? batteryhorse
+picoCTF{175_chr157m45_188ab8c9}
 ```
 
 Flag: `picoCTF{175_chr157m45_188ab8c9}`
@@ -1037,6 +1053,29 @@ picoCTF{d30bfu5c4710n_f7w_2769cf94}
 ```
 
 Flag: `picoCTF{d30bfu5c4710n_f7w_2769cf94}`
+
+## **Fresh Java**
+
+### ***Description***
+Can you get the flag? <br>
+Reverse engineer this [Java program](https://artifacts.picoctf.net/c/210/KeygenMe.class).
+<details>
+    <summary>Hint 1</summary>
+    Use a decompiler for Java!
+</details>
+
+### ***Writeup***
+I recommend using the JD-GUI java decompiler using `sudo apt install jd-gui` since it comes with a gui. `javap` is also a decompiler but it only shows the method names of the .class file. 
+
+```
+└─$ jd-gui KeygenMe.class
+```
+
+![jd-gui](./Reverse_Engineering/Fresh_Java/jd-gui.png)
+
+The program looks at the input string and matches each character one by one. Piece together all the substrings and the flag should appear.
+
+Flag: `picoCTF{700l1ng_r3qu1r3d_c2475607}`
 
 # **Web Exploitation**
 - [Includes](./picoCTF_2022.md#Includes)
