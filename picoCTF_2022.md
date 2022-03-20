@@ -9,6 +9,7 @@
 - [basic-file-exploit](./picoCTF_2022.md#basic-file-exploit)
 - [buffer-overflow-0](./picoCTF_2022.md#buffer-overflow-0)
 - [CVE-XXXX-XXXX](./picoCTF_2022.md#CVE-XXXX-XXXX)
+- [RPS](./picoCTF_2022.md#RPS)
 
 ## **basic-file-exploit**
 
@@ -150,6 +151,60 @@ A quick Google search of "first recorded remote code execution (RCE) vulnerabili
 
 Flag: `picoCTF{CVE-2021-34527}`
 
+## **RPS**
+
+### ***Description***
+Here's a program that plays rock, paper, scissors against you. I hear something good happens if you win 5 times in a row. <br>
+Connect to the program with netcat: <br>
+`$ nc saturn.picoctf.net 50305` <br>
+The program's source code with the flag redacted can be downloaded [here](https://artifacts.picoctf.net/c/445/game-redacted.c).
+<details>
+    <summary>Hint 1</summary>
+    How does the program check if you won?
+</details>
+
+### ***Writeup***
+Looking at the source code, I need `wins` to be greater than 5 for the program to print the flag to the console. The `wins` variable is accumulated if `play()` returns true, which is if `strstr(player_turn, loses[computer_turn])` also returns a non-zero result. Looking at the man pages for `strstr` shows that it is in the form of `char *strstr(const char *haystack, const char *needle)`, where `strstr()` finds the first occurrence of the substring `needle` in the string `haystack`. It then returns a pointer to the beginning of the located substring. Therefore, the program tries to find the specific string of `loses[computer_turn]` in the `player_turn` string that we provided to the program, where `char* loses[3] = {"paper", "scissors", "rock"};`. Essentially, create a string where if `strstr` tries to find the substring match it succeeds on all occurences, so such a string that does that is `rockpaperscissors` because each choice is a substring in that input string.
+
+```
+─$ nc saturn.picoctf.net 50305
+Welcome challenger to the game of Rock, Paper, Scissors
+For anyone that beats me 5 times in a row, I will offer up a flag I found
+Are you ready?
+Type '1' to play a game
+Type '2' to exit the program
+1
+1
+
+
+Please make your selection (rock/paper/scissors):
+rockpaperscissors
+rockpaperscissors
+You played: rockpaperscissor
+The computer played: paper
+You win! Play again?
+Type '1' to play a game
+Type '2' to exit the program
+1
+1
+
+...
+
+Please make your selection (rock/paper/scissors):
+rockpaperscissors
+rockpaperscissors
+You played: rockpaperscissors
+The computer played: scissors
+You win! Play again?
+Congrats, here's the flag!
+picoCTF{50M3_3X7R3M3_1UCK_D80B11AA}
+Type '1' to play a game
+Type '2' to exit the program
+2
+2
+```
+
+Flag: `picoCTF{50M3_3X7R3M3_1UCK_D80B11AA}`
 
 # **Cryptography**
 - [basic-mod1](./picoCTF_2022.md#basic-mod1)
