@@ -470,6 +470,7 @@ picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 - [File types](./picoCTF_2022.md#File-types)
 - [Lookey here](./picoCTF_2022.md#Lookey-here)
 - [Packets Primer](./picoCTF_2022.md#Packets-Primer)
+- [Redaction gone wrong](./picoCTF_2022.md#Redaction-gone-wrong)
 
 ## **Enhance!**
 
@@ -677,6 +678,42 @@ Starting Wireshark on `network-dump.flag.pcap`:
 
 Flag: `picoCTF{p4ck37_5h4rk_d0565941}`
 
+## **Redaction gone wrong**
+
+### ***Description***
+Now you DON’T see me. <br>
+This [report](https://artifacts.picoctf.net/c/264/Financial_Report_for_ABC_Labs.pdf) has some critical data in it, some of which have been redacted correctly, while some were not. Can you find an important key that was not redacted properly?
+<details>
+    <summary>Hint 1</summary>
+    How can you be sure of the redaction?
+</details>
+
+### ***Writeup***
+I recommend using a tool called `pdftotext` which can be found in `poppler-utils`, so go ahead and install that using `sudo apt install poppler-utils`.
+
+```
+└─$ pdftotext -v Financial_Report_for_ABC_Labs.pdf
+pdftotext version 20.09.0
+Copyright 2005-2020 The Poppler Developers - http://poppler.freedesktop.org
+Copyright 1996-2011 Glyph & Cog, LLC
+```
+
+Running `pdftotext` will copy the contents in the pdf to a separate text file, so printing the text file should display everything, including all the text that was "redacted" in the PDF.
+
+```
+└─$ cat Financial_Report_for_ABC_Labs.txt
+Financial Report for ABC Labs, Kigali, Rwanda for the year 2021.
+Breakdown - Just painted over in MS word.
+
+Cost Benefit Analysis
+Credit Debit
+This is not the flag, keep looking
+Expenses from the
+picoCTF{C4n_Y0u_S33_m3_fully}
+Redacted document.
+```
+
+Flag: `picoCTF{C4n_Y0u_S33_m3_fully}`
 
 # **Reverse Engineering**
 - [file-run1](./picoCTF_2022.md#file-run1)
