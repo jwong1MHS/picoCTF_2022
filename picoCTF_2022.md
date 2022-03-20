@@ -54,6 +54,85 @@ picoCTF{M4K3_5UR3_70_CH3CK_Y0UR_1NPU75_25D6CDDB}
 
 Flag: `picoCTF{M4K3_5UR3_70_CH3CK_Y0UR_1NPU75_25D6CDDB}`
 
+## **buffer overflow 0**
+
+### ***Description***
+Smash the stack <br>
+Let's start off simple, can you overflow the correct buffer? The program is available here. You can view source here. And connect with it using: <br>
+`nc saturn.picoctf.net 64712`
+<details>
+    <summary>Hint 1</summary>
+    How can you trigger the flag to print?
+</details>
+<details>
+    <summary>Hint 2</summary>
+    If you try to do the math by hand, maybe try and add a few more characters. Sometimes there are things you aren't expecting.
+</details>
+<details>
+    <summary>Hint 3</summary>
+    Run `man gets` and read the BUGS section. How many characters can the program really read?
+</details>
+
+### ***Writeup***
+If you cannot run the vuln executable, it might be because your OS does not support 32-bit programs. I recommend either [installing gcc-multilib](https://superuser.com/a/1603878) to install libc6 to run a 32-bit ELF on a 64-bit architecture (`sudo apt install gcc-multilib`), or use the gcc compiler and compile the C code (`gcc vuln.c -o vuln`).
+
+Looking at the vuln code, I can see that it first takes the contents of `flag.txt` and copies it to the global buffer `flag` using `fgets`. It then takes user input and writes it to `buf1` which is of size 100. Then, it calls the `vuln` void function which will use `strcpy` and copy the contents of `buf1` to `buf2` which is of size 16 using `gets`.
+
+The error here is the vulnerable `strcpy` function, because it will write all the bytes from the input buffer to the destination buffer, and it can even write past the buffer (which is called a buffer overflow).
+
+Attempting to execute vuln shows that it needs a `flag.txt`, so I created a new `flag.txt` file with some random string. This will be used later to test whether the contents of flag are printed out onto the console.
+
+```
+└─$ cat flag.txt
+picoCTF{random_string}
+```
+
+Time to use gdb! I am going to write 16 A's into `input.txt`. Reason why I am using multiple A's is because since A is 0x41, I just have to look multiple occurences of 0x41 in the stack.
+
+```
+└─$ python3 -c "print('A'*16)" > input.txt && ./vuln < input.txt
+Input: The program will exit now
+```
+
+Run `gdb vuln` and then `layout asm` to get the assembly as well as the debugger console. If you are using `layout asm`, the memory addresses displayed may not be correct (not sure why). For example, it might say main starts at address 0x1382, which is incorrect. I recommend running the program once to display the correct addresses, so main should start at 0x56556382.
+
+Correct memory addresses:
+![after_layout_asm](Binary_Exploitation/buffer_overflow_0/after_layout_asm.png)
+
+Since `strcpy` is in the strcpy function, I am going to analyze the assembly at that section by doing `disas vuln`. The `strcpy` function is called at address  0x56556374, so I will set a breakpoint at the address right after the call by doing `b *0x56556379` so I can analyze the stack. Time to run the program once with `input.txt` by doing `r < input.txt` and see what the stack looks like.
+
+The first 64 bytes of sp register:
+![sp_with_16A](Binary_Exploitation/buffer_overflow_0/sp_with_16A.png)
+
+I can see that `buf2` starts at address 0xffffd048 because that's where the 0x41 starts to appear. I also notice that at 0xffffd054 there is something stored there. Running `info frame` shows that `ebx` is stored there, which currently has the contents of `eax` as shown from address 0x56556372.
+
+Frame info at the breakpoint after strcpy:
+![ebx_register_location](Binary_Exploitation/buffer_overflow_0/ebx_register_location.png)
+
+I am going to try and corrupt ebx register and possibly create a segmentation fault, I will write 20 A's into `input.txt` now and see what happens.
+
+```
+└─$ python3 -c "print('A'*20)" > input.txt && ./vuln < input.txt
+Input: picoCTF{random_string}
+```
+
+As expected, something got correupt which outputted the contents of `flag`. Let's see what happened on the assembly scale.
+
+![corrupt_sp](Binary_Exploitation/buffer_overflow_0/corrupt_sp.png)
+
+Notice that at 0xffffd054 it changed from 0xac to 0x00, but 0xffffd055 remains unchanged and is still 0x8f. This is because when writing the 20 A's into input.txt, the `gets` function reads it as 20 A's as well as the null-terminating character, so in reality 21 characters are written to buf2. 
+
+If you look at memory address 0x5655635b, the program allocates 0x14, or in decimal 20 bytes for buf2. Even though buf2 was created on the stack with a size of 16, it needs the null-terminating charaters, so in reality buf2 needs 17 bytes of storage. Since this is a 32-bit program, memory is stored in units of 4 bytes, and the smallest multiple of 4 greater than 17 is 20.
+
+Any input greater than 19 characters will segfault the program, which then the signal handler will capture and call `sigsegv_handler` and will print the flag and fully exit. I took `input.txt` which already has 20 A's and fed the contents to the netcat connection.
+
+```
+└─$ python3 -c "print('A'*20)" > input.txt && nc saturn.picoctf.net 64712 < input.txt
+Input: picoCTF{ov3rfl0ws_ar3nt_that_bad_81929e72}
+```
+
+Flag: `picoCTF{M4K3_5UR3_70_CH3CK_Y0UR_1NPU75_25D6CDDB}`
+
 ## **CVE-XXXX-XXXX**
 
 ### ***Description***
@@ -161,6 +240,10 @@ Wrap your answer with picoCTF{}, put underscores in place of pauses, and use all
 
 ### ***Writeup***
 After analyzing the wav file using Audacity, I can see that the waveform is split by either short or long waves. The short ones are dots and the long ones are dashes. After writing down the morse code, I used an [online morse code translator](https://morsecode.world/international/translator.html) to convert the message.
+
+```
+└─$ audacity morse_chal.wav
+```
 
 ![morse_code](./Cryptography/morse-code/morse_code.png)
 
@@ -314,6 +397,7 @@ picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 # **Forensics**
 - [Enhance!](./picoCTF_2022.md#Enhance)
 - [Lookey here](./picoCTF_2022.md#Lookey-here)
+- [Packets Primer](./picoCTF_2022.md#Packets-Primer)
 
 ## **Enhance!**
 
@@ -326,9 +410,85 @@ First I tried viewing the SVG using eog (Eye of Gnome), but sadly even after vie
 
 The alternative to getting the string is to cat the SVG and analyze every text and try to piece it together.
 
+Starting InkScape on `drawing.flag.svg`:
+```
+└─$ inkscape drawing.flag.svg
+```
+
 ![enhance](./Forensics/Enhance!/enhance.png)
 
 Flag: `picoCTF{3nh4nc3d_6783cc46}`
+
+<!-- ## **File types**
+
+### ***Description***
+This file was found among some files marked confidential but my pdf reader cannot read it, maybe yours can. <br>
+You can download the file from [here](https://artifacts.picoctf.net/c/326/Flag.pdf).
+<details>
+    <summary>Hint 1</summary>
+    Remember that some file types can contain and nest other files
+</details>
+
+### ***Writeup***
+Downloading and then running `file Flag.pdf` shows that it's a shell archive text, and reading the comments at the top of the file shows that to run a shell archive (shar) file you do `sh FILE`.
+
+```
+└─$ file Flag.pdf
+Flag.pdf: shell archive text
+```
+
+```
+└─$ cat Flag.pdf
+#!/bin/sh
+# This is a shell archive (produced by GNU sharutils 4.15.2).
+# To extract the files from this archive, save it to some FILE, remove
+# everything before the '#!/bin/sh' line above, then type 'sh FILE'.
+#
+...
+```
+At first, running `sh Flag.pdf` did nothing because it was missing the `uudecode` dependency, so I had to install it in the `sharutils` package.  
+```
+└─$ sh Flag.pdf
+x - created lock directory _sh00048.
+x - extracting flag (text)
+Flag.pdf: 119: uudecode: not found
+restore of flag failed
+flag: MD5 check failed
+x - removed lock directory _sh00048.
+```
+```
+└─$ sudo apt install sharutils
+```
+
+Running `sh Flag.pdf` again turned successful, and checking the current directory there is a new file there called `flag`.
+```
+└─$ sh Flag.pdf
+x - created lock directory _sh00048.
+x - extracting flag (text)
+x - removed lock directory _sh00048.
+```
+```
+└─$ ls
+flag  Flag.pdf
+```
+
+Passing the `file` command on it shows that it is a ar archive. Therefore, run `ar xv flag` to extract the contents of the archives (x) as well as list name of each member which is extracted (v).
+```
+└─$ file flag
+flag: current ar archive
+```
+```
+└─$ ar xv flag
+x - flag
+```
+
+Checking the file type of `flag` again shows that now it is of type `cpio`
+```
+└─$ file flag
+flag: cpio archive
+```
+
+Flag:  -->
 
 ## **Lookey here**
 
@@ -350,10 +510,34 @@ Run `grep picoCTF{ anthem.flag.txt` in the terminal.
 
 Flag: `picoCTF{gr3p_15_@w3s0m3_4554f5f5}`
 
+## **Packets Primer**
+
+### ***Description***
+Download the packet capture file and use packet analysis software to find the flag.
+- [Download packet capture](https://artifacts.picoctf.net/c/202/network-dump.flag.pcap)
+<details>
+    <summary>Hint 1</summary>
+    Wireshark, if you can install and use it, is probably the most beginner friendly packet analysis software product.
+</details>
+
+### ***Writeup***
+Opening up the .pcap file using Wireshark and analyzing all the packets, the 4th packet has bytes that when converted to ASCII gives the flag.
+
+Starting Wireshark on `network-dump.flag.pcap`:
+```
+└─$ wireshark network-dump.flag.pcap
+```
+
+![packets_primer](./Forensics/Packets_Primer/packets_primer.png)
+
+Flag: `picoCTF{p4ck37_5h4rk_d0565941}`
+
+
 # **Reverse Engineering**
 - [file-run1](./picoCTF_2022.md#file-run1)
 - [file-run2](./picoCTF_2022.md#file-run2)
 - [GDB Test Drive](./picoCTF_2022.md#GDB-Test-Drive)
+- [patchme.py](./picoCTF_2022.md#patchme.py)
 
 ## **file-run1**
 
@@ -454,6 +638,57 @@ picoCTF{d3bugg3r_dr1v3_50e616ac}
 ```
 
 Flag: `picoCTF{d3bugg3r_dr1v3_50e616ac}`
+
+## **patchme.py**
+
+### ***Description***
+Can you get the flag? <br>
+Run this [Python program](https://artifacts.picoctf.net/c/389/patchme.flag.py) in the same directory as this [encrypted flag](https://artifacts.picoctf.net/c/389/flag.txt.enc).
+
+### ***Writeup***
+Running `patchme.flag.py` will prompt the user for a password, which we do not have at the moment. After inspecting the python code however, lines 18-22 checks that the input that is written to `user_pw` matches a series of split strings. Piecing together the strings produces `ak98-=90adfjhgj321sleuth9000`, which is the password. Running `patchme.flag.py` again with the password gives the flag.
+
+```
+└─$ python3 patchme.flag.py
+Please enter correct password for flag: ak98-=90adfjhgj321sleuth9000
+Welcome back... your flag, user:
+picoCTF{p47ch1ng_l1f3_h4ck_c3daefb9}
+```
+
+Flag: `picoCTF{p47ch1ng_l1f3_h4ck_c3daefb9}`
+
+## **Safe Opener**
+
+### ***Description***
+Can you open this safe? <br>
+I forgot the key to my safe but this [program](https://artifacts.picoctf.net/c/463/SafeOpener.java) is supposed to help me with retrieving the lost key. Can you help me unlock my safe? <br>
+Put the password you recover into the picoCTF flag format like:
+`picoCTF{password}`
+
+### ***Writeup***
+First, if running `java SafeOpener` does not work because the JDK is not installed, I recommend doing `sudo apt install default-jdk` which should install openjdk 11.0 (you can verify this by doing `java --vesion`).
+
+After looking at the java code, I notice that the input we pass into the program is stored as `key`, and then is converted to Base64 (because `encoder` is a Base64 encoder) and stored as `encodedkey`. Finally, it checks if `encodedkey` equals `cGwzYXMzX2wzdF9tM18xbnQwX3RoM19zYWYz` in the openSafe method. In other words, the string that we pass into the program when encoded in Base64 must be equal to `cGwzYXMzX2wzdF9tM18xbnQwX3RoM19zYWYz`. The easiest way to approach this is to decode the above string from Base64 to ASCII. The following python command should do the trick.
+
+```
+└─$ python3
+Python 3.9.10 (main, Feb 22 2022, 13:54:07)
+[GCC 11.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import base64
+>>> encodedkey = "cGwzYXMzX2wzdF9tM18xbnQwX3RoM19zYWYz"
+>>> base64.b64decode(encodedkey.encode('ascii')).decode('ascii')
+'pl3as3_l3t_m3_1nt0_th3_saf3'
+```
+After getting the password, pass it back into the program to verify it's correct:
+```
+└─$ java SafeOpener.java
+Enter password for the safe: pl3as3_l3t_m3_1nt0_th3_saf3
+cGwzYXMzX2wzdF9tM18xbnQwX3RoM19zYWYz
+Sesame open
+```
+
+Flag: `picoCTF{pl3as3_l3t_m3_1nt0_th3_saf3}`
 
 # **Web Exploitation**
 - [Includes](./picoCTF_2022.md#Includes)
