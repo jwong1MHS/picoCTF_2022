@@ -1380,7 +1380,11 @@ Go to this [website](http://saturn.picoctf.net:55771/) and see what you can disc
 </details>
 
 ### ***Writeup***
-Going to the website there is a button that says `Continue as guest`, and going to it goes to `check.php` and a screen that says `We apologize, but we have no guest services at the moment.`. Looking at the cookies on Chrome by opening Developer Tools (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>) and going to Application and then Cookies under Storage, I see there is a cookie called isAdmin with a value of 0. Changing the value from 0 to 1 and refreshing the page gives the flag.
+Going to the website there is a button that says `Continue as guest`, and going to it goes to `check.php` and a screen that says `We apologize, but we have no guest services at the moment.`. Looking at the cookies on Firefox by opening Web Developer Tools (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>) and going to Cookies under Storage, I see there is a cookie called isAdmin with a value of 0. Changing the value from 0 to 1 and refreshing the page gives the flag.
+
+![firefox-developer-tools](./Web_Exploitation/Power_Cookie/firefox-developer-tools.png)
+
+Same idea for Google Chrome except Cookies are under Storage which is under Application.
 
 ![chrome-developer-tools](./Web_Exploitation/Power_Cookie/chrome-developer-tools.png)
 
