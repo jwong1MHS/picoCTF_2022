@@ -1389,3 +1389,41 @@ Same idea for Google Chrome except Cookies are under Storage which is under Appl
 ![chrome-developer-tools](./Web_Exploitation/Power_Cookie/chrome-developer-tools.png)
 
 Flag: `picoCTF{gr4d3_A_c00k13_80bad8fa}`
+
+## **Roboto Sans**
+
+### ***Description***
+The flag is somewhere on this web application not necessarily on the website. Find it. <br>
+Check [this](http://saturn.picoctf.net:55983/) out.
+
+### ***Writeup***
+Looking at the title of the challenge, I assume I would have to look at the `robots.txt` file on the webpage, so I went ahead and did that.
+
+```
+User-agent *
+Disallow: /cgi-bin/
+Think you have seen your flag or want to keep looking.
+
+ZmxhZzEudHh0;anMvbXlmaW
+anMvbXlmaWxlLnR4dA==
+svssshjweuiwl;oiho.bsvdaslejg
+Disallow: /wp-admin/
+```
+
+I see a few hidden folders like `/cgi-bin/` and `/wp-admin/` but they do not lead to anywhere sadly. The weird strings might lead to something, and I assume it is in base64 considering how the second string ends in `==`. Running `robots.txt` through a [Base64 decoder python script](./Web_Exploitation/Roboto_Sans/robots.py) I wrote shows the following:
+
+```
+└─$ python3 robots.py
+User-agent *
+Disallow: /cgi-bin/
+Think you have seen your flag or want to keep looking.
+
+ZmxhZzEudHh0;anMvbXlmaW
+js/myfile.txt
+svssshjweuiwl;oiho.bsvdaslejg
+Disallow: /wp-admin/
+```
+
+The first and third string was unsuccessful in being decoded, but the second line decoded to `js/myfile.txt`. Going to that url indeed gives me the flag.
+
+Flag: `picoCTF{Who_D03sN7_L1k5_90B0T5_6ac64608}`
