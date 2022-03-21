@@ -92,7 +92,7 @@ picoCTF{random_string}
 I am going to write 16 A's into `input.txt` and feed it into the vuln program to see what happens.
 
 ```
-└─$ python3 -c "print('A'*16)" > input.txt && ./vuln < input.txt
+└─$ python3 -c "print('A'*16)" > input.txt ; ./vuln < input.txt
 Input: The program will exit now
 ```
 
@@ -114,7 +114,7 @@ Frame info at the breakpoint after strcpy:
 I am going to try and corrupt ebx register and possibly create a segmentation fault, I will write 20 A's into `input.txt` now and see what happens.
 
 ```
-└─$ python3 -c "print('A'*20)" > input.txt && ./vuln < input.txt
+└─$ python3 -c "print('A'*20)" > input.txt ; ./vuln < input.txt
 Input: picoCTF{random_string}
 ```
 
@@ -129,7 +129,7 @@ If you look at memory address 0x5655635b, the program allocates 0x14, or in deci
 Any input greater than 19 characters will segfault the program, which then the signal handler will capture and call `sigsegv_handler` and will print the flag and fully exit. I took `input.txt` which already has 20 A's and fed the contents to the netcat connection.
 
 ```
-└─$ python3 -c "print('A'*20)" > input.txt && nc saturn.picoctf.net 64712 < input.txt
+└─$ python3 -c "print('A'*20)" > input.txt ; nc saturn.picoctf.net 64712 < input.txt
 Input: picoCTF{ov3rfl0ws_ar3nt_that_bad_81929e72}
 ```
 
@@ -216,7 +216,8 @@ Flag: `picoCTF{50M3_3X7R3M3_1UCK_D80B11AA}`
 - [substitution1](./picoCTF_2022.md#substitution1)
 - [substitution2](./picoCTF_2022.md#substitution2)
 - [transposition-trial](./picoCTF_2022.md#transposition-trial)
-- [Vigenere](./picoCTF_2022.md#vigenere)
+- [Vigenere](./picoCTF_2022.md#Vigenere)
+- [diffie-hellman](./picoCTF_2022.md#diffie-hellman)
 
 ## **basic-mod1**
 
@@ -541,6 +542,51 @@ output of `vigenere.py`:
 picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 ```
 
+Flag: `picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}`
+
+## **diffie-hellman**
+
+### ***Description***
+Alice and Bob wanted to exchange information secretly. The two of them agreed to use the Diffie-Hellman key exchange algorithm, using p = 13 and g = 5. They both chose numbers secretly where Alice chose 7 and Bob chose 3. Then, Alice sent Bob some encoded text (with both letters and digits) using the generated key as the shift amount for a Caesar cipher over the alphabet and the decimal digits. Can you figure out the contents of the message? <br>
+Download the message [here](https://artifacts.picoctf.net/c/452/message.txt). <br>
+Wrap your decrypted message in the picoCTF flag format like: `picoCTF{decrypted_message}`
+<details>
+    <summary>Hint 1</summary>
+    Diffie-Hellman key exchange is a well known algorithm for generating keys, try looking up how the secret key is generated
+    <summary>Hint 2</summary>
+    For your Caesar shift amount, try forwards and backwards.
+</details>
+
+### ***Writeup***
+The challenge is to find the Caesar cipher shift, which is going to be the shared secret key in the [Diffie-Hellman key exchange](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange). The information we have is `p = 13, g = 5, a = 7, b = 3`, and our goal is to find s where `A = g^a mod p, B = g^b mod p, and s = B^a mod p = A^b mod p`. We have `A = 5^7 mod 13 = 8`.
+
+```
+└─$ python3
+Python 3.9.10 (main, Feb 22 2022, 13:54:07)
+[GCC 11.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> p, g, a, b = 13, 5, 7, 3
+>>> A, B = pow(g,a) % p, pow(g,b) % p
+>>> s1, s2 = pow(B,a) % p, pow(A,b) % p
+>>> print(s1, s2)
+5 5
+```
+
+Since both s1 and s2 are 5, we are sure `s = 5` which is going to be out Caesar cipher shift. Using an online Caesar cipher tool like the one [here](https://www.dcode.fr/caesar-cipherhttps://www.dcode.fr/caesar-cipher) and changing the alphabet to `ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789`, I get a result with a shift of 5 backwards.
+
+![caesar-cipher](./Cryptography/diffie-hellman/caesar-cipher.png)
+
+Alternatively, you can try to do the shift through the terminal.
+
+```
+└─$ echo -en "Shift 5 forwards: "; cat message.txt | tr 'A-Z0-9' 'F-Z0-9A-E' ; echo -en "\nShift 5 backwards: "; cat mes
+sage.txt | tr 'F-Z0-9A-E' 'A-Z0-9'
+Shift 5 forwards: MEDFE1_MBZRD1_BF_E_IBH_A4HNEHDN_CNLPADPH
+Shift 5 backwards: C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7
+```
+
+Flag: `C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7`
+
 # **Forensics**
 - [Enhance!](./picoCTF_2022.md#Enhance)
 - [File types](./picoCTF_2022.md#File-types)
@@ -616,14 +662,14 @@ Flag.pdf: shell archive text
 The rest of this is really tedious and extracting nested files.
 
 ```
-└─$ ar -xv flag && file *
+└─$ ar -xv flag ; file *
 x - flag
 flag:     cpio archive
 Flag.pdf: shell archive text
 ```
 
 ```
-└─$ cpio -iuv < flag && file *
+└─$ cpio -iuv < flag ; file *
 flag
 2 blocks
 flag:     bzip2 compressed data, block size = 900k
@@ -631,7 +677,7 @@ Flag.pdf: shell archive text
 ```
 
 ```
-└─$ bzip2 -dv flag && file *
+└─$ bzip2 -dv flag ; file *
 bzip2: Can't guess original name for flag -- using flag.out
   flag:    done
 flag.out: gzip compressed data, was "flag", last modified: Tue Mar 15 06:50:44 2022, from Unix, original size modulo 2^32 327
@@ -639,7 +685,7 @@ Flag.pdf: shell archive text
 ```
 
 ```
-└─$ gunzip -vS .out flag.out && file *
+└─$ gunzip -vS .out flag.out ; file *
 flag.out:        -1.5% -- replaced with flag
 flag:     lzip compressed data, version: 1
 Flag.pdf: shell archive text
@@ -647,7 +693,7 @@ Flag.pdf: shell archive text
 
 Have to install using `sudo apt install lzip`:
 ```
-└─$ lzip -dv flag && file *
+└─$ lzip -dv flag ; file *
 lzip: Can't guess original name for 'flag' -- using 'flag.out'
   flag: done
 flag.out: LZ4 compressed data (v1.4+)
@@ -656,7 +702,7 @@ Flag.pdf: shell archive text
 
 Have to install using `sudo apt install lz4`
 ```
-└─$ unlz4 -v flag.out flag && mv flag flag.out && file *
+└─$ unlz4 -v flag.out flag ; mv flag flag.out ; file *
 *** LZ4 command line interface 64-bits v1.9.3, by Yann Collet ***
 flag.out             : decoded 264 bytes
 flag.out: LZMA compressed data, non-streamed, size 253
@@ -664,7 +710,7 @@ Flag.pdf: shell archive text
 ```
 
 ```
-└─$ unlzma -vS .out flag.out && file *
+└─$ unlzma -vS .out flag.out ; file *
 flag.out (1/1)
   100 %               264 B / 253 B = 1.043
 flag:     lzop compressed data - version 1.040, LZO1X-1, os: Unix
@@ -673,7 +719,7 @@ Flag.pdf: shell archive text
 
 Have to install using `sudo apt install lzop`
 ```
-└─$ lzop -dvff flag && file *
+└─$ lzop -dvff flag ; file *
 decompressing flag into flag.raw
 flag:     lzop compressed data - version 1.040, LZO1X-1, os: Unix
 Flag.pdf: shell archive text
@@ -681,7 +727,7 @@ flag.raw: lzip compressed data, version: 1
 ```
 
 ```
-└─$ lzip -dv flag.raw && file *
+└─$ lzip -dv flag.raw ; file *
 lzip: Can't guess original name for 'flag.raw' -- using 'flag.raw.out'
   flag.raw: done
 flag:         lzop compressed data - version 1.040, LZO1X-1, os: Unix
@@ -690,7 +736,7 @@ flag.raw.out: XZ compressed data, checksum CRC64
 ```
 
 ```
-└─$ unxz -vS .out flag.raw.out && file *
+└─$ unxz -vS .out flag.raw.out ; file *
 flag.raw.out (1/1)
   100 %               152 B / 110 B = 1.382
 flag:     lzop compressed data - version 1.040, LZO1X-1, os: Unix
