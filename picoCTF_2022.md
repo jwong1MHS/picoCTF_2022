@@ -576,7 +576,7 @@ Since both s1 and s2 are 5, we are sure `s = 5` which is going to be out Caesar 
 
 ![caesar-cipher](./Cryptography/diffie-hellman/caesar-cipher.png)
 
-Alternatively, you can try to do the shift through the terminal.
+Alternatively, you can try to do the shift through the terminal:
 
 ```
 └─$ echo -en "Shift 5 forwards: "; cat message.txt | tr 'A-Z0-9' 'F-Z0-9A-E' ; echo -en "\nShift 5 backwards: "; cat mes
@@ -1368,3 +1368,20 @@ On the webpage, notice that giving any of the filenames on the site (`divine-com
 Giving the input `..` will go back one directory, so the webpage will print `/usr/share/nginx/`. Giving the input `../..` will print `/usr/share/`, `../../..` will print `/usr/`, `../../../..` will print `/`, and finally `../../../../flag.txt` will print the contents of `/flag.txt`. This type of attack is called a [path traversal attack](https://en.wikipedia.org/wiki/Directory_traversal_attack).
 
 Flag: `picoCTF{7h3_p47h_70_5ucc355_e73ad00d}`
+
+## **Power Cookie**
+
+### ***Description***
+Can you get the flag? <br>
+Go to this [website](http://saturn.picoctf.net:55771/) and see what you can discover.
+<details>
+    <summary>Hint 1</summary>
+    Do you know how to modify cookies?
+</details>
+
+### ***Writeup***
+Going to the website there is a button that says `Continue as guest`, and going to it goes to `check.php` and a screen that says `We apologize, but we have no guest services at the moment.`. Looking at the cookies on Chrome by opening Developer Tools (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>) and going to Application and then Cookies under Storage, I see there is a cookie called isAdmin with a value of 0. Changing the value from 0 to 1 and refreshing the page gives the flag.
+
+![chrome-developer-tools](./Web_Exploitation/Power_Cookie/chrome-developer-tools.png)
+
+Flag: `picoCTF{gr4d3_A_c00k13_80bad8fa}`
