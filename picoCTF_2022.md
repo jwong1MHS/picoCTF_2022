@@ -1427,3 +1427,25 @@ Disallow: /wp-admin/
 The first and third string was unsuccessful in being decoded, but the second line decoded to `js/myfile.txt`. Going to that url indeed gives me the flag.
 
 Flag: `picoCTF{Who_D03sN7_L1k5_90B0T5_6ac64608}`
+
+## **Secrets**
+
+### ***Description***
+We have several pages hidden. Can you find the one with the flag? <br>
+The website is running [here](http://saturn.picoctf.net:52114/).
+<details>
+    <summary>Hint 1</summary>
+    folders folders folders
+</details>
+
+### ***Writeup***
+Going to the page and looking at the source code, I notice that both the `index.css` and `DX1KYM.jpg` files are under the `/secret/assets/` directory. I then checked if an `index.html` file existed under that directory since that is generally the most important file on a webpage, and there is no match. I stepped back a directory, and luckily there was a `secret/index.html` file.
+
+The page has text that says `Finally. You almost found me. you are doing well`, which means I am getting closer but I am not there yet. Looking at the source code of that shows the page uses `hidden/file.css`. I checked if `secret/hidden/index.html` existed, and I got a match. 
+
+The page is a login form, and looking at the source code of that shows it used `superhidden/login.css`, and so checking `/secret/hidden/superhidden/index.html` gives text that says `Finally. You found me. But can you see me`. Highlighting the whole page or looking at the source code again shows the flag.
+
+I also used `dirb` (`sudo apt install dirb`) which is a web-content scanner that looks for existing and/or hidden Web Objects through brute force of common path/file names. Using `dirb` revealed the existence of `secret/index.html` as well as `secret/hidden/index.html`, so that helped me look for a pattern for these files.
+
+
+Flag: `picoCTF{succ3ss_@h3n1c@10n_f55d602d}`
