@@ -1167,7 +1167,7 @@ Flag: `picoCTF{700l1ng_r3qu1r3d_c2475607}`
 - [Power Cookie](./picoCTF_2022.md#Power-Cookie)
 - [Roboto Sans](./picoCTF_2022.md#Roboto-Sans)
 - [Secrets](./picoCTF_2022.md#Secrets)
-- [SQL-Direct](./picoCTF_2022.md#SQL-Direct)
+- [SQL Direct](./picoCTF_2022.md#SQL-Direct)
 
 ## **Includes**
 
