@@ -1168,6 +1168,7 @@ Flag: `picoCTF{700l1ng_r3qu1r3d_c2475607}`
 - [Roboto Sans](./picoCTF_2022.md#Roboto-Sans)
 - [Secrets](./picoCTF_2022.md#Secrets)
 - [SQL Direct](./picoCTF_2022.md#SQL-Direct)
+- [SQLiLite](./picoCTF_2022.md#SQLiLite)
 
 ## **Includes**
 
@@ -1456,6 +1457,7 @@ Flag: `picoCTF{succ3ss_@h3n1c@10n_f55d602d}`
 ## **SQL Direct**
 
 ### ***Description***
+<button name="button" onclick="http://www.google.com">Launch Instance</button> <br>
 Connect to this PostgreSQL server and find the flag! <br>
 `psql -h saturn.picoctf.net -p 60772 -U postgres pico` <br>
 Password is `postgres`
@@ -1490,3 +1492,24 @@ pico=# SELECT * FROM flags;
 ```
 
 Flag: `picoCTF{L3arN_S0m3_5qL_t0d4Y_34fa2564}`
+
+## **SQLiLite**
+
+### ***Description***
+<button name="button" onclick="http://www.google.com">Launch Instance</button> <br>
+Can you login to this website? <br>
+Try to login [here](http://saturn.picoctf.net:59901/).
+<details>
+    <summary>Hint 1</summary>
+    `admin` is the user you want to login as.
+</details>
+
+### ***Writeup***
+The website brings to a Log In page that I assume stores the username and password in a SQL database. Typing in `a` for both the username and password shows a page that says `Login Failed`, but it also shows an SQL query above that says `SELECT * FROM users WHERE name='a' AND password='a'
+`. If I give a username that is `' OR 1=1 --` and no input for the password, the query then becomes `SELECT * FROM users WHERE name='' OR 1=1--' AND password=''`. 
+
+To break it down, the first statement `SELECT * FROM users WHERE name=''` may or may not return a result, but the next statement `1=1` will always return true, and an `OR` statement will always be true if one proposition is true. Therefore, the whole SQL query will return true, and anything after `1=1` is commented out to make the full statement true.
+
+The webpage now says `Logged in! But can you see the flag, it is in plainsight.` Inspect the source code of the page of `login.php`, and it should give the flag under a `p hidden` container.
+
+Flag: `picoCTF{L00k5_l1k3_y0u_solv3d_it_cd1df56b}`
