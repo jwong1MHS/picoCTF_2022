@@ -138,7 +138,7 @@ Flag: `picoCTF{M4K3_5UR3_70_CH3CK_Y0UR_1NPU75_25D6CDDB}`
 ## **CVE-XXXX-XXXX**
 
 ### ***Description***
-Enter the CVE of the vulnerability as the flag with the correct flag format:
+Enter the CVE of the vulnerability as the flag with the correct flag format: <br>
 `picoCTF{CVE-XXXX-XXXXX}` replacing XXXX-XXXXX with the numbers for the matching vulnerability. <br>
 The CVE we're looking for is the first recorded remote code execution (RCE) vulnerability in 2021 in the Windows Print Spooler Service, which is available across desktop and server versions of Windows operating systems. The service is used to manage printers and print servers.
 <details>
@@ -1447,5 +1447,42 @@ The page is a login form, and looking at the source code of that shows it used `
 
 I also used `dirb` (`sudo apt install dirb`) which is a web-content scanner that looks for existing and/or hidden Web Objects through brute force of common path/file names. Using `dirb` revealed the existence of `secret/index.html` as well as `secret/hidden/index.html`, so that helped me look for a pattern for these files.
 
-
 Flag: `picoCTF{succ3ss_@h3n1c@10n_f55d602d}`
+
+## **SQL Direct**
+
+### ***Description***
+Connect to this PostgreSQL server and find the flag! <br>
+`psql -h saturn.picoctf.net -p 60772 -U postgres pico` <br>
+Password is `postgres`
+<details>
+    <summary>Hint 1</summary>
+    What does a SQL database contain?
+</details>
+
+### ***Writeup***
+First install PostgreSQL (`sudo apt-get install postgresql-client`), and then log in to the server. Get a list of all the schemas by doing `\dt`. I see there's only one schema called `flags`, so I decided to print the whole table by running `SELECT * FROM flags` which printed the firstname, lastname, and address column, one of which is the flag.
+
+```
+└─$ psql -h saturn.picoctf.net -p 60772 -U postgres pico
+Password for user postgres:
+psql (14.2 (Debian 14.2-1))
+Type "help" for help.
+
+pico=# \dt
+         List of relations
+ Schema | Name  | Type  |  Owner
+--------+-------+-------+----------
+ public | flags | table | postgres
+(1 row)
+
+pico=# SELECT * FROM flags;
+ id | firstname | lastname  |                address
+----+-----------+-----------+----------------------------------------
+  1 | Luke      | Skywalker | picoCTF{L3arN_S0m3_5qL_t0d4Y_34fa2564}
+  2 | Leia      | Organa    | Alderaan
+  3 | Han       | Solo      | Corellia
+(3 rows)
+```
+
+Flag: `picoCTF{L3arN_S0m3_5qL_t0d4Y_34fa2564}`
