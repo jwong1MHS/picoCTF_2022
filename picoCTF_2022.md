@@ -921,6 +921,7 @@ Flag: `picoCTF{7h3r3_15_n0_5p00n_1b8d71db}`
 - [unpackme.py](./picoCTF_2022.md#unpackmepy)
 - [bloat.py](./picoCTF_2022.md#bloatpy)
 - [Fresh Java](./picoCTF_2022.md#Fresh-Java)
+- [Bbbbloat](./picoCTF_2022.md#Bbbbloat)
 
 ## **file-run1**
 
@@ -1157,6 +1158,32 @@ I recommend using the JD-GUI java decompiler using `sudo apt install jd-gui` sin
 The program looks at the input string and matches each character one by one. Piece together all the substrings and the flag should appear.
 
 Flag: `picoCTF{700l1ng_r3qu1r3d_c2475607}`
+
+## **Bbbbloat**
+
+### ***Description***
+Can you get the flag? <br>
+Reverse engineer this [binary](https://artifacts.picoctf.net/c/304/bbbbloat).
+
+### ***Writeup***
+Opening the binary with Ghidra (`sudo apt install ghidra`, might need to do `sudo apt install default-jdk` beforehand) and going to the `.text` section of the binary, I see three functions: `FUN_00101620` pushed to register `R8`, `FUN_001015b0` to `RCX`, and `FUN_00101307` to `RDI`. The first two functions did not reveal anything, but the third function revealed something useful. It seems that in the function, it takes user input and stores in the variable `local_48`, and then checks if that variable is equal to `0x86187`. If it does not, then it prints the statement `Sorry, that's not it!`, but if it does then it seems it prints the flag. `0x861871` in decimal is 549255, which is the number the program is looking for.
+
+```
+└─$ python3
+Python 3.9.10 (main, Feb 22 2022, 13:54:07)
+[GCC 11.2.0] on linux
+Type "help", "copyright", "credits" or "license" for more information.
+>>> print(int('86187', 16))
+549255
+```
+
+```
+└─$ ./bbbbloat
+What's my favorite number? 549255
+picoCTF{cu7_7h3_bl047_33e4341f}
+```
+
+Flag: `picoCTF{cu7_7h3_bl047_33e4341f}`
 
 # **Web Exploitation**
 - [Includes](./picoCTF_2022.md#Includes)
