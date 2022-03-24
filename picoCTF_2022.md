@@ -7,8 +7,9 @@
 
 # **Binary Exploitation**
 - [basic-file-exploit](./picoCTF_2022.md#basic-file-exploit)
-- [buffer-overflow-0](./picoCTF_2022.md#buffer-overflow-0)
+- [buffer overflow 0](./picoCTF_2022.md#buffer-overflow-0)
 - [CVE-XXXX-XXXX](./picoCTF_2022.md#CVE-XXXX-XXXX)
+- [buffer overflow 1](./picoCTF_2022.md#buffer-overflow-1)
 - [RPS](./picoCTF_2022.md#RPS)
 
 ## **basic-file-exploit**
@@ -96,17 +97,17 @@ I am going to write 16 A's into `input.txt` and feed it into the vuln program to
 Input: The program will exit now
 ```
 
-As expected, nothing much and the program exits nicely. Time to use GDB! Reason why I am using multiple A's is because since A is 0x41, I just have to look multiple occurences of 0x41 in the stack. Run `gdb vuln` and then `layout asm` to get the assembly as well as the debugger console. If you are using `layout asm`, the memory addresses displayed may not be correct (not sure why). For example, it might say main starts at address 0x1382, which is incorrect. I recommend running the program once to display the correct addresses, so main should start at 0x56556382.
+As expected, nothing much and the program exits nicely. Time to use GDB! Reason why I am using multiple A's is because since A is 0x41, I just have to look multiple occurences of 0x41 in the stack. Run `gdb vuln` and then `layout asm` to get the assembly as well as the debugger console. If you are using `layout asm`, the memory addresses displayed may not be correct (not sure why). For example, it might say main starts at address 0x1382, which is incorrect. I recommend running the program once to display the correct addresses, so main should start at `0x56556382`.
 
 Correct memory addresses:
 ![after_layout_asm](Binary_Exploitation/buffer_overflow_0/after_layout_asm.png)
 
-Since `strcpy` is in the vuln function, I am going to analyze the assembly at that section by doing `disas vuln`. The `strcpy` function is called at address  0x56556374, so I will set a breakpoint at the address right after the call by doing `b *0x56556379` so I can analyze the stack. Time to run the program once with `input.txt` by doing `r < input.txt` and see what the stack looks like.
+Since `strcpy` is in the vuln function, I am going to analyze the assembly at that section by doing `disas vuln`. The `strcpy` function is called at address  `0x56556374`, so I will set a breakpoint at the address right after the call by doing `b *0x56556379` so I can analyze the stack. Time to run the program once with `input.txt` by doing `r < input.txt` and see what the stack looks like.
 
 The first 64 bytes of sp register:
 ![sp_with_16A](Binary_Exploitation/buffer_overflow_0/sp_with_16A.png)
 
-I can see that `buf2` starts at address 0xffffd048 because that's where the 0x41 starts to appear. I also notice that at 0xffffd054 there is something stored there. Running `info frame` shows that `ebx` is stored there, which currently has the contents of `eax` as shown from the instruction at address 0x56556372.
+I can see that `buf2` starts at address `0xffffd048` on the stack because that's where the `0x41` starts to appear. I also notice that at `0xffffd054` there is something stored there. Running `info frame` shows that `ebx` is stored there, which currently has the contents of `eax` as shown from the instruction at address `0x56556372`.
 
 Frame info at the breakpoint after strcpy:
 ![ebx_register_location](Binary_Exploitation/buffer_overflow_0/ebx_register_location.png)
@@ -122,9 +123,9 @@ As expected, something was corrupt which outputted the contents of `flag`. Let's
 
 ![corrupt_sp](Binary_Exploitation/buffer_overflow_0/corrupt_sp.png)
 
-Notice that at 0xffffd054 it changed from 0xac to 0x00, but 0xffffd055 remains unchanged and is still 0x8f. This is because when writing the 20 A's into input.txt, the `gets` function reads it as 20 A's as well as the null-terminating character, so in reality 21 characters are written to buf2. 
+Notice that at `0xffffd054` it changed from `0xac` to `0x00`, but `0xffffd055` remains unchanged and is still `0x8f`. This is because when writing the 20 A's into input.txt, the `gets` function reads it as 20 A's as well as the null-terminating character, so in reality 21 characters are written to `buf2`. 
 
-If you look at memory address 0x5655635b, the program allocates 0x14, or in decimal 20 bytes for buf2. Even though buf2 was created on the stack with a size of 16, it needs the null-terminating charaters, so in reality buf2 needs 17 bytes of storage. Since this is a 32-bit program, memory is stored in units of 4 bytes, and the smallest multiple of 4 greater than 17 is 20.
+If you look at memory address `0x5655635b`, the program allocates `0x14`, or in decimal 20 bytes for `buf2`. Even though buf2 was created on the stack with a size of 16, it needs the null-terminating charaters, so in reality `buf2` needs 17 bytes of storage. Since this is a 32-bit program, memory is stored in units of 4 bytes, and the smallest multiple of 4 greater than 17 is 20.
 
 Any input greater than 19 characters will segfault the program, which then the signal handler will capture and call `sigsegv_handler` and will print the flag and fully exit. I took `input.txt` which already has 20 A's and fed the contents to the netcat connection.
 
@@ -150,6 +151,54 @@ The CVE we're looking for is the first recorded remote code execution (RCE) vuln
 A quick Google search of "first recorded remote code execution (RCE) vulnerability in 2021 in the Windows Print Spooler Service" gives this [result](https://msrc.microsoft.com/update-guide/vulnerability/cve-2021-34527). Make sure that the Attack Vector is Network and not Local.
 
 Flag: `picoCTF{CVE-2021-34527}`
+
+## **buffer overflow 1**
+
+### ***Description***
+<button name="button" onclick="http://www.google.com">Launch Instance</button> <br>
+Control the return address <br>
+Now we're cooking! You can overflow the buffer and return to the flag function in the [program](https://artifacts.picoctf.net/c/253/vuln). <br>
+You can view source [here](https://artifacts.picoctf.net/c/253/vuln.c). And connect with it using `nc saturn.picoctf.net 57610`
+<details>
+    <summary>Hint 1</summary>
+    Make sure you consider big Endian vs small Endian.
+    <summary>Hint 2</summary>
+    Changing the address of the return pointer can call different functions.
+</details>
+
+### ***Writeup***
+Looking at the source code in `vuln.c`, it seems that after calling the print function in the `main()` function, it jumps to the `vuln()` function and takes user input using `gets()` and stores it in the local character buffer `buf` of size 32. It then prints the return address of the function, and the program ends.
+
+```
+└─$ python3 -c "print('A'*32)" > input.txt ; ./vuln < input.txt
+Please enter your string:
+Okay, time to return... Fingers Crossed... Jumping to 0x804932f
+```
+
+After running the vuln program multiple times with a string length of 32 and less, I noticed that the return address that the program jumps back to is the same, which is `0x804932f`.
+
+There is also another function `win()` in the code that does not seem to be called anywhere in the program. The function seems to print the contents of `flag.txt`, which is what we are trying to achieve. Therefore, the goal is to change the return address so that in `vuln()` it does not jump back to `main()`, but to the other function `win()`.
+
+Running `gdb vuln` followed by `layout asm` shows the assembly code of the binary, and running `disas win` shows that the function starts at address `0x80491f6`, which we want to change to be the address of `win()`. Only problem now is we need to find the size of the payload and how many A's we need so that we can reach and overwrite the return address.
+
+Set a breakpoint at the start of address `0x80492a3` right after the `gets()` function is called. Running the debugger with `r < input.txt` I run `info frame` and notice that the return address is the `saved eip`, and the `eip` register is at address `0xffffd0bc` on the stack. Then running `x/64xb $sp`, I notice that `0x41` start appearing at address `0xffffd090` on the stack, which is where `buf` is.
+Doing address subtraction shows that there is 44 bytes between where `buf` is and where the return address is.
+
+```
+(gdb) p 0xffffd0bc-0xffffd090
+$1 = 44
+```
+
+Originally, my payload which was 44 A's followed by `\x08\x04\x93\x2f` did not work because the byte order is in little endian. Therefore, I had to reverse my payload as well as include a null terminating character to finish it off.
+
+```
+└─$ python3 -c "import sys; sys.stdout.buffer.write(b'\x41'*44+b'\xf6\x91\x04\x08'+b'\x0a')" > input.txt ; nc saturn.picoctf.net 57610 < input.txt
+Please enter your string:
+Okay, time to return... Fingers Crossed... Jumping to 0x80491f6
+picoCTF{addr3ss3s_ar3_3asy_b9797671}
+```
+
+Flag: `picoCTF{addr3ss3s_ar3_3asy_b9797671}`
 
 ## **RPS**
 
