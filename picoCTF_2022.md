@@ -1,4 +1,9 @@
-# **Table of Contents**
+# picoCTF 2022
+
+A beginner-style CTF hosted on picoGym at https://play.picoctf.org/practice?originalEvent=69
+
+## Table of Contents
+
 | Categories                                                   | Completed | Progress                                                     |
 | ------------------------------------------------------------ | --------- | ------------------------------------------------------------ |
 | [Binary Exploitation](#Binary_Exploitation/Binary_Exploitation.md) | 6/14      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/43) |
@@ -7,7 +12,7 @@
 | [Reverse Engineering](#Reverse-Engineering)                  | 9/12      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/75) |
 | [Web Exploitation](#Web-Exploitation)                        | 10/12     | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/83) |
 
-# **Cryptography**
+# Cryptography
 - [basic-mod1](#basic-mod1)
 - [basic-mod2](#basic-mod2)
 - [credstuff](#credstuff)
@@ -20,9 +25,9 @@
 - [Vigenere](#Vigenere)
 - [diffie-hellman](#diffie-hellman)
 
-## **basic-mod1**
+## basic-mod1
 
-### ***Description***
+### *Description*
 We found this weird message being passed around on the servers, we think we have a working decrpytion scheme. <br>
 Download the message [here](https://artifacts.picoctf.net/c/393/message.txt). <br>
 Take each number mod 37 and map it to the following character set: 0-25 is the alphabet (uppercase), 26-35 are the decimal digits, and 36 is an underscore. <br>
@@ -36,7 +41,7 @@ Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_
     <code>mod 37</code> means modulo 37. It gives the remainder of a number after being divided by 37.
 </details>
 
-### ***Writeup***
+### *Writeup*
 Make a [python script](./Cryptography/basic-mod1/basic_mod1.py) that will parse the text file and mod every number.
 
 `message.txt`:
@@ -52,9 +57,9 @@ picoCTF{R0UND_N_R0UND_79C18FB3}
 
 Flag: `picoCTF{R0UND_N_R0UND_79C18FB3}`
 
-## **basic-mod2**
+## basic-mod2
 
-### ***Description***
+### *Description*
 A new modular challenge! <br>
 Download the message [here](https://artifacts.picoctf.net/c/499/message.txt). <br>
 Take each number mod 41 and find the modular inverse for the result. Then map to the following character set: 1-26 are the alphabet, 27-36 are the decimal digits, and 37 is an underscore. <br>
@@ -72,7 +77,7 @@ Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_
     It's recommended to use a tool to find the modular inverses
 </details>
 
-### ***Writeup***
+### *Writeup*
 Make a [python script](./Cryptography/basic-mod2/basic_mod2.py) that will parse the text file and mod every number and then find the modular inverse using `pow(a,-1,x)`.
 
 `message.txt`:
@@ -88,9 +93,9 @@ picoCTF{1NV3R53LY_H4RD_C680BDC1}
 
 Flag: `picoCTF{1NV3R53LY_H4RD_C680BDC1}`
 
-## **credstuff**
+## credstuff
 
-### ***Description***
+### *Description*
 We found a leak of a blackmarket website's login credentials. Can you find the password of the user `cultiris` and successfully decrypt it? <br>
 Download the leak [here](https://artifacts.picoctf.net/c/534/leak.tar). <br>
 The first user in `usernames.txt` corresponds to the first password in `passwords.txt`. The second user corresponds to the second password, and so on.
@@ -99,7 +104,7 @@ The first user in `usernames.txt` corresponds to the first password in `password
     Maybe other passwords will have hints about the leak?
 </details>
 
-### ***Writeup***
+### *Writeup*
 
 First thing to do is extract the tar file using `tar -xvf leak.tar` and then change directory into the extracted folder.
 
@@ -133,9 +138,9 @@ picoCTF{C7r1F_54V35_71M3}
 
 Flag: `picoCTF{1NV3R53LY_H4RD_C680BDC1}`
 
-## **morse-code**
+## morse-code
 
-### ***Description***
+### *Description*
 Morse code is well known. Can you decrypt this? <br>
 Download the file [here](https://artifacts.picoctf.net/c/235/morse_chal.wav). <br>
 Wrap your answer with picoCTF{}, put underscores in place of pauses, and use all lowercase.
@@ -144,7 +149,7 @@ Wrap your answer with picoCTF{}, put underscores in place of pauses, and use all
     Audacity is a really good program to analyze morse code audio.
 </details>
 
-### ***Writeup***
+### *Writeup*
 After analyzing the wav file using Audacity, I can see that the waveform is split by either short or long waves. The short ones are dots and the long ones are dashes. After writing down the morse code, I used an [online morse code translator](https://morsecode.world/international/translator.html) to convert the message.
 
 ```
@@ -170,9 +175,9 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 Flag: `picoCTF{wh47_h47h_90d_w20u9h7}`
 
-## **rail-fence**
+## rail-fence
 
-### ***Description***
+### *Description*
 A type of transposition cipher is the rail fence cipher, which is described [here](https://en.wikipedia.org/wiki/Rail_fence_cipher). Here is one such cipher encrypted using the rail fence with 4 rails. Can you decrypt it? <br>
 Download the message [here](https://artifacts.picoctf.net/c/275/message.txt). <br>
 Put the decoded message in the picoCTF flag format, `picoCTF{decoded_message}`.
@@ -181,7 +186,7 @@ Put the decoded message in the picoCTF flag format, `picoCTF{decoded_message}`.
     Once you've understood how the cipher works, it's best to draw it out yourself on paper
 </details>
 
-### ***Writeup***
+### *Writeup*
 It is really tedious to do by hand since you have to take into account of padding the plaintext, so it is better to use an online cracking tool such as the one [here](https://www.boxentriq.com/code-breaking/rail-fence-cipher). Giving 4 rails should give a result.
 
 ```
@@ -193,9 +198,9 @@ T     a           _     7     N     6     D     E     7
 
 Flag: `picoCTF{WH3R3_D035_7H3_F3NC3_8361N_4ND_3ND_EB4C7D74}`
 
-## **substitution0**
+## substitution0
 
-### ***Description***
+### *Description*
 A message has come in but it seems to be all scrambled. Luckily it seems to have the key at the beginning. Can you crack this substitution cipher? <br>
 Download the message [here](https://artifacts.picoctf.net/c/379/message.txt).
 <details>
@@ -203,7 +208,7 @@ Download the message [here](https://artifacts.picoctf.net/c/379/message.txt).
     Try a frequency attack. An online tool might help.
 </details>
 
-### ***Writeup***
+### *Writeup*
 Make a [python script](./Cryptography/substitution0/substitution0.py) that will take the first line of the message and use it as the substitution key.
 
 `message.txt`:
@@ -241,9 +246,9 @@ The flag is: picoCTF{5UB5717U710N_3V0LU710N_59533A2E}
 
 Flag: `picoCTF{5UB5717U710N_3V0LU710N_59533A2E}`
 
-## **substitution1**
+## substitution1
 
-### ***Description***
+### *Description*
 A second message has come in the mail, and it seems almost identical to the first one. Maybe the same thing will work again.
 Download the message [here](https://artifacts.picoctf.net/c/414/message.txt).
 <details>
@@ -255,7 +260,7 @@ Download the message [here](https://artifacts.picoctf.net/c/414/message.txt).
     Do the punctuation and the individual words help you make any substitutions?
 </details>
 
-### ***Writeup***
+### *Writeup*
 Make a [python script](./Cryptography/substitution1/substitution1.py) and slowly replace letters. It started with knowing that the last sentence should have the string `picoCTF{` to knowing that the sentence should include `the flag is: picoCTF{`, and then figuring out that the message has to do with talking about CTFs. It was a lot of replacing letter by letter.
 
 Quick note: since it's a substitution cipher which means each letter maps to another letter, it's better to use a hashmap (in this case a dictionary for python) since it has a lookup time of O(1), and it's better than having 26 if statements.
@@ -273,9 +278,9 @@ CTFs (short for capture the flag) are a type of computer security competition. C
 
 Flag: `picoCTF{FR3QU3NCY_4774CK5_4R3_C001_4871E6FB}`
 
-## **substitution2**
+## substitution2
 
-### ***Description***
+### *Description*
 It seems that another encrypted message has been intercepted. The encryptor seems to have learned their lesson though and now there isn't any punctuation! Can you still crack the cipher? <br>
 Download the message [here](https://artifacts.picoctf.net/c/107/message.txt).
 <details>
@@ -283,7 +288,7 @@ Download the message [here](https://artifacts.picoctf.net/c/107/message.txt).
     Try refining your frequency attack, maybe analyzing groups of letters would improve your results?
 </details>
 
-### ***Writeup***
+### *Writeup*
 Make a [python script](./Cryptography/substitution2/substitution2.py) and slowly replace letters. It started with knowing that the last sentence should have the string `picoCTF{` to knowing that the sentence should include `theflagispicoCTF{`, and then guessing what some of the words might be using context clues. It was a lot of replacing letter by letter.
 
 `message.txt`:
@@ -299,9 +304,9 @@ thereexistseveralotherwellestablishedhighschoolcomputersecuritycompetitionsinclu
 
 Flag: `picoCTF{N6R4M_4N41Y515_15_73D10U5_8E1BF808}`
 
-## **transposition-trial**
+## transposition-trial
 
-### ***Description***
+### *Description*
 Our data got corrupted on the way here. Luckily, nothing got replaced, but every block of 3 got scrambled around! The first word seems to be three letters long, maybe you can use that to recover the rest of the message. <br>
 Download the corrupted message [here](https://artifacts.picoctf.net/c/459/message.txt).
 <details>
@@ -309,7 +314,7 @@ Download the corrupted message [here](https://artifacts.picoctf.net/c/459/messag
     Split the message up into blocks of 3 and see how the first block is scrambled
 </details>
 
-### ***Writeup***
+### *Writeup*
 Analyzing the corrupted message it seems that for every block of three characters, the first characters is moved to the end (so instead of 1 2 3 it got corrupted to 2 3 1). Make a [python script](./Cryptography/transposition-trial/transposition-trial.py) that will check every third character and move it two places back.
 
 ```
@@ -319,9 +324,9 @@ The flag is picoCTF{7R4N5P051N6_15_3XP3N51V3_5C82A0E0}
 
 Flag: `picoCTF{7R4N5P051N6_15_3XP3N51V3_5C82A0E0}`
 
-## **Vigenere**
+## Vigenere
 
-### ***Description***
+### *Description*
 Can you decrypt this message?
 Decrypt this [message](https://artifacts.picoctf.net/c/527/cipher.txt) using this key "CYLAB".
 <details>
@@ -329,7 +334,7 @@ Decrypt this [message](https://artifacts.picoctf.net/c/527/cipher.txt) using thi
     https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
 </details>
 
-### ***Writeup***
+### *Writeup*
 Make a [python script](./Cryptography/Vigenere/vigenere.py) that will do the Vigenere Cipher. Used the [geeksforgeeks](https://www.geeksforgeeks.org/vigenere-cipher/) page for code reference and [dcode.fr](https://www.dcode.fr/vigenere-cipher) to verify.
 
 `message.txt`:
@@ -345,9 +350,9 @@ picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 
 Flag: `picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}`
 
-## **diffie-hellman**
+## diffie-hellman
 
-### ***Description***
+### *Description*
 Alice and Bob wanted to exchange information secretly. The two of them agreed to use the Diffie-Hellman key exchange algorithm, using p = 13 and g = 5. They both chose numbers secretly where Alice chose 7 and Bob chose 3. Then, Alice sent Bob some encoded text (with both letters and digits) using the generated key as the shift amount for a Caesar cipher over the alphabet and the decimal digits. Can you figure out the contents of the message? <br>
 Download the message [here](https://artifacts.picoctf.net/c/452/message.txt). <br>
 Wrap your decrypted message in the picoCTF flag format like: `picoCTF{decrypted_message}`
@@ -358,7 +363,7 @@ Wrap your decrypted message in the picoCTF flag format like: `picoCTF{decrypted_
     For your Caesar shift amount, try forwards and backwards.
 </details>
 
-### ***Writeup***
+### *Writeup*
 The challenge is to find the Caesar cipher shift, which is going to be the shared secret key in the [Diffie-Hellman key exchange](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange). The information we have is `p = 13, g = 5, a = 7, b = 3`, and our goal is to find s where `A = g^a mod p, B = g^b mod p, and s = B^a mod p = A^b mod p`. We have `A = 5^7 mod 13 = 8`.
 
 ```
@@ -388,7 +393,7 @@ Shift 5 backwards: C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7
 
 Flag: `C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7`
 
-# **Forensics**
+# Forensics
 - [Enhance!](#Enhance)
 - [File types](#File-types)
 - [Lookey here](#Lookey-here)
@@ -397,13 +402,13 @@ Flag: `C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7`
 - [Sleuthkit Intro](#Sleuthkit-Intro)
 - [St3g0](#St3g0)
 
-## **Enhance!**
+## Enhance!
 
-### ***Description***
+### *Description*
 Download this image file and find the flag. <br>
 - [Download image file](https://artifacts.picoctf.net/c/139/drawing.flag.svg)
 
-### ***Writeup***
+### *Writeup*
 First I tried viewing the SVG using eog (Eye of Gnome), but sadly even after viewing the image under 2000x magnification I was unable to find anything at the center. Therefore, I tried another tool called InkScape, and viewed it under 25600x magnification. I was able to see something within the very tiny black dot at the center of the image, but I am unable to figure out what it is. I then opened the Document Properties menu (<kbd>Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>D</kbd>) and changed the scale of the document from 1.0 to 0.1, which allowed me to see the flag.
 
 The alternative to getting the string is to cat the SVG and analyze every text and try to piece it together.
@@ -417,9 +422,9 @@ Starting InkScape on `drawing.flag.svg`:
 
 Flag: `picoCTF{3nh4nc3d_6783cc46}`
 
-## **File types**
+## File types
 
-### ***Description***
+### *Description*
 This file was found among some files marked confidential but my pdf reader cannot read it, maybe yours can. <br>
 You can download the file from [here](https://artifacts.picoctf.net/c/326/Flag.pdf).
 <details>
@@ -427,7 +432,7 @@ You can download the file from [here](https://artifacts.picoctf.net/c/326/Flag.p
     Remember that some file types can contain and nest other files
 </details>
 
-### ***Writeup***
+### *Writeup*
 Downloading and then running `file Flag.pdf` shows that it's a shell archive text, and reading the comments at the top of the file shows that to run a shell archive (shar) file you do `sh FILE`.
 
 ```
@@ -561,9 +566,9 @@ picoCTF{f1len@m3_m@n1pul@t10n_f0r_0b2cur17y_347eae65}
 
 Flag: `picoCTF{f1len@m3_m@n1pul@t10n_f0r_0b2cur17y_347eae65}`
 
-## **Lookey here**
+## Lookey here
 
-### ***Description***
+### *Description*
 Attackers have hidden information in a very large mass of data in the past, maybe they are still doing it. <br>
 Download the data [here](https://artifacts.picoctf.net/c/297/anthem.flag.txt).
 <details>
@@ -571,7 +576,7 @@ Download the data [here](https://artifacts.picoctf.net/c/297/anthem.flag.txt).
     Download the file and search for the flag based on the known prefix.
 </details>
 
-### ***Writeup***
+### *Writeup*
 Run `grep picoCTF{ anthem.flag.txt` in the terminal.
 
 ```
@@ -581,9 +586,9 @@ Run `grep picoCTF{ anthem.flag.txt` in the terminal.
 
 Flag: `picoCTF{gr3p_15_@w3s0m3_4554f5f5}`
 
-## **Packets Primer**
+## Packets Primer
 
-### ***Description***
+### *Description*
 Download the packet capture file and use packet analysis software to find the flag.
 - [Download packet capture](https://artifacts.picoctf.net/c/202/network-dump.flag.pcap)
 <details>
@@ -591,7 +596,7 @@ Download the packet capture file and use packet analysis software to find the fl
     Wireshark, if you can install and use it, is probably the most beginner friendly packet analysis software product.
 </details>
 
-### ***Writeup***
+### *Writeup*
 Opening up the .pcap file using Wireshark and analyzing all the packets, the 4th packet has bytes that when converted to ASCII gives the flag.
 
 Starting Wireshark on `network-dump.flag.pcap`:
@@ -603,9 +608,9 @@ Starting Wireshark on `network-dump.flag.pcap`:
 
 Flag: `picoCTF{p4ck37_5h4rk_d0565941}`
 
-## **Redaction gone wrong**
+## Redaction gone wrong
 
-### ***Description***
+### *Description*
 Now you DON’T see me. <br>
 This [report](https://artifacts.picoctf.net/c/264/Financial_Report_for_ABC_Labs.pdf) has some critical data in it, some of which have been redacted correctly, while some were not. Can you find an important key that was not redacted properly?
 <details>
@@ -613,7 +618,7 @@ This [report](https://artifacts.picoctf.net/c/264/Financial_Report_for_ABC_Labs.
     How can you be sure of the redaction?
 </details>
 
-### ***Writeup***
+### *Writeup*
 I recommend using a tool called `pdftotext` which can be found in `poppler-utils`, so go ahead and install that using `sudo apt install poppler-utils`.
 
 ```
@@ -640,15 +645,15 @@ Redacted document.
 
 Flag: `picoCTF{C4n_Y0u_S33_m3_fully}`
 
-## **Sleuthkit Intro**
+## Sleuthkit Intro
 
-### ***Description***
+### *Description*
 Download the disk image and use `mmls` on it to find the size of the Linux partition. Connect to the remote checker service to check your answer and get the flag. <br>
 Note: if you are using the webshell, download and extract the disk image into `/tmp` not your home directory. <br>
 - [Download disk image](https://artifacts.picoctf.net/c/114/disk.img.gz)
 - Access checker program: `nc saturn.picoctf.net 52279`
 
-### ***Writeup***
+### *Writeup*
 
 Not much to this challenge. Just extract the file and run `mmls` on it.
 ```
@@ -679,9 +684,9 @@ picoCTF{mm15_f7w!}
 
 Flag: `picoCTF{mm15_f7w!}`
 
-## **St3g0**
+## St3g0
 
-### ***Description***
+### *Description*
 Download this image and find the flag. <br>
 - [Download image](https://artifacts.picoctf.net/c/424/pico.flag.png)
 <details>
@@ -689,7 +694,7 @@ Download this image and find the flag. <br>
     We know the end sequence of the message will be `$t3g0`.
 </details>
 
-### ***Writeup***
+### *Writeup*
 Use a steganography detection tool like zsteg, which you can get by running `sudo apt install ruby-dev` then `gem install zsteg`. Running zsteg on the png file shows the following on the console.
 
 ```
@@ -713,7 +718,7 @@ b4,abgr,lsb,xy      .. file: Novell LANalyzer capture file
 
 Flag: `picoCTF{7h3r3_15_n0_5p00n_1b8d71db}`
 
-# **Reverse Engineering**
+# Reverse Engineering
 - [file-run1](./picoCTF_2022.md#file-run1)
 - [file-run2](./picoCTF_2022.md#file-run2)
 - [GDB Test Drive](./picoCTF_2022.md#GDB-Test-Drive)
@@ -724,11 +729,12 @@ Flag: `picoCTF{7h3r3_15_n0_5p00n_1b8d71db}`
 - [Fresh Java](./picoCTF_2022.md#Fresh-Java)
 - [Bbbbloat](./picoCTF_2022.md#Bbbbloat)
 
-## **file-run1**
+## file-run1
 
-### ***Description***
+### *Description*
 A program has been provided to you, what happens if you try to run it on the command line? <br>
 Download the program [here](https://artifacts.picoctf.net/c/311/run).
+
 <details>
     <summary>Hint 1</summary>
     To run the program at all, you must make it executable (i.e. `$ chmod +x run`)
@@ -738,7 +744,7 @@ Download the program [here](https://artifacts.picoctf.net/c/311/run).
     Try running it by adding a '.' in front of the path to the file (i.e. `$ ./run`)
 </details>
 
-### ***Writeup***
+### *Writeup*
 Give permission to execute `run` (you might not need to do this):
 ```
 └─$ chmod +x run
@@ -751,9 +757,9 @@ The flag is: picoCTF{U51N6_Y0Ur_F1r57_F113_102c30db}
 
 Flag: `picoCTF{U51N6_Y0Ur_F1r57_F113_102c30db}`
 
-## **file-run2**
+## file-run2
 
-### ***Description***
+### *Description*
 Another program, but this time, it seems to want some input. What happens if you try to run it on the command line with input "Hello!"?
 Download the program [here](https://artifacts.picoctf.net/c/354/run).
 <details>
@@ -761,7 +767,7 @@ Download the program [here](https://artifacts.picoctf.net/c/354/run).
     Try running it and add the phrase "Hello!" with a space in front (i.e. "./run Hello!")
 </details>
 
-### ***Writeup***
+### *Writeup*
 Give permission to execute `run` and run the program with the argument "Hello!":
 ```
 └─$ ./run Hello!
@@ -770,9 +776,9 @@ The flag is: picoCTF{F1r57_4rgum3n7_4653b5f6}
 
 Flag: `picoCTF{F1r57_4rgum3n7_4653b5f6}`
 
-## **GDB Test Drive**
+## GDB Test Drive
 
-### ***Description***
+### *Description*
 Can you get the flag? <br>
 Download this binary. <br>
 Here's the test drive instructions:
@@ -783,7 +789,7 @@ Here's the test drive instructions:
 - `(gdb) run`
 - `(gdb) jump *(main+104)`
 
-### ***Writeup***
+### *Writeup*
 Give permission to execute `gdbme` and run gdb on `gdbme`. Bring out the assembly code layout, set a breakpoint at the sleep call in the main function at address `(main+99)`, run the program which will stop at the sleep call, and the jump to the next instruction. What the gdb instructions are doing is it's jumping over the infinite sleep, whereas running the program normally will just have it be stuck on the sleep.
 
 ```
@@ -824,13 +830,13 @@ picoCTF{d3bugg3r_dr1v3_50e616ac}
 
 Flag: `picoCTF{d3bugg3r_dr1v3_50e616ac}`
 
-## **patchme.py**
+## patchme.py
 
-### ***Description***
+### *Description*
 Can you get the flag? <br>
 Run this [Python program](https://artifacts.picoctf.net/c/389/patchme.flag.py) in the same directory as this [encrypted flag](https://artifacts.picoctf.net/c/389/flag.txt.enc).
 
-### ***Writeup***
+### *Writeup*
 Running `patchme.flag.py` will prompt the user for a password, which we do not have at the moment. After inspecting the python code however, lines 18-22 checks that the input that is written to `user_pw` matches a series of split strings. Piecing together the strings produces `ak98-=90adfjhgj321sleuth9000`, which is the password. Running `patchme.flag.py` again with the password gives the flag.
 
 ```
@@ -844,13 +850,13 @@ Flag: `picoCTF{p47ch1ng_l1f3_h4ck_c3daefb9}`
 
 ## **Safe Opener**
 
-### ***Description***
+### *Description*
 Can you open this safe? <br>
 I forgot the key to my safe but this [program](https://artifacts.picoctf.net/c/463/SafeOpener.java) is supposed to help me with retrieving the lost key. Can you help me unlock my safe? <br>
 Put the password you recover into the picoCTF flag format like:
 `picoCTF{password}`
 
-### ***Writeup***
+### *Writeup*
 First, if running `java SafeOpener` does not work because the JDK is not installed, I recommend doing `sudo apt install default-jdk` which should install openjdk 11.0 (you can verify this by doing `java --vesion`).
 
 After looking at the java code, I notice that the input we pass into the program is stored as `key`, and then is converted to Base64 (because `encoder` is a Base64 encoder) and stored as `encodedkey`. Finally, it checks if `encodedkey` equals `cGwzYXMzX2wzdF9tM18xbnQwX3RoM19zYWYz` in the openSafe method. In other words, the string that we pass into the program when encoded in Base64 must be equal to `cGwzYXMzX2wzdF9tM18xbnQwX3RoM19zYWYz`. The easiest way to approach this is to decode the above string from Base64 to ASCII. The following python command should do the trick.
@@ -876,13 +882,13 @@ Sesame open
 
 Flag: `picoCTF{pl3as3_l3t_m3_1nt0_th3_saf3}`
 
-## **unpackme.py**
+## unpackme.py
 
-### ***Description***
+### *Description*
 Can you get the flag? <br>
 Reverse engineer this [Python program](https://artifacts.picoctf.net/c/467/unpackme.flag.py).
 
-### ***Writeup***
+### *Writeup*
 First install the cryptography python library so that you can run the pythong program using `pip install cryptography`. Then, copy the contents of `unpackme.flag.py` to a new python file, except replace the last line of `exec(plain.decode())` to `print(plain.decode())` to see what the program is trying to execute.
 
 ```
@@ -905,13 +911,13 @@ picoCTF{175_chr157m45_188ab8c9}
 
 Flag: `picoCTF{175_chr157m45_188ab8c9}`
 
-## **bloat.py**
+## bloat.py
 
-### ***Description***
+### *Description*
 Can you get the flag? <br>
 Run this [Python program](https://artifacts.picoctf.net/c/431/bloat.flag.py) in the same directory as this [encrypted flag](https://artifacts.picoctf.net/c/431/flag.txt.enc).
 
-### ***Writeup***
+### *Writeup*
 Looking at the python code for `bloat.flag.py` made me want to vomit, so I decided to create another python program called `bloat.py` that will replace the character concatenations with a whole string. I used python to do the job instead of looking up every index in `a`. Result looks like [this](./Reverse_Engineering/bloat.py/bloat.py).
 
 ```
@@ -937,9 +943,9 @@ picoCTF{d30bfu5c4710n_f7w_2769cf94}
 
 Flag: `picoCTF{d30bfu5c4710n_f7w_2769cf94}`
 
-## **Fresh Java**
+## Fresh Java
 
-### ***Description***
+### *Description*
 Can you get the flag? <br>
 Reverse engineer this [Java program](https://artifacts.picoctf.net/c/210/KeygenMe.class).
 <details>
@@ -947,7 +953,7 @@ Reverse engineer this [Java program](https://artifacts.picoctf.net/c/210/KeygenM
     Use a decompiler for Java!
 </details>
 
-### ***Writeup***
+### *Writeup*
 I recommend using the JD-GUI java decompiler using `sudo apt install jd-gui` since it comes with a gui. `javap` is also a decompiler but it only shows the method names of the .class file. 
 
 ```
@@ -960,13 +966,13 @@ The program looks at the input string and matches each character one by one. Pie
 
 Flag: `picoCTF{700l1ng_r3qu1r3d_c2475607}`
 
-## **Bbbbloat**
+## Bbbbloat
 
-### ***Description***
+### *Description*
 Can you get the flag? <br>
 Reverse engineer this [binary](https://artifacts.picoctf.net/c/304/bbbbloat).
 
-### ***Writeup***
+### *Writeup*
 Opening the binary with Ghidra (`sudo apt install ghidra`, might need to do `sudo apt install default-jdk` beforehand) and going to the `.text` section of the binary, I see three functions: `FUN_00101620` pushed to register `R8`, `FUN_001015b0` to `RCX`, and `FUN_00101307` to `RDI`. The first two functions did not reveal anything, but the third function revealed something useful. It seems that in the function, it takes user input and stores in the variable `local_48`, and then checks if that variable is equal to `0x86187`. If it does not, then it prints the statement `Sorry, that's not it!`, but if it does then it seems it prints the flag. `0x861871` in decimal is 549255, which is the number the program is looking for.
 
 ```
@@ -986,7 +992,7 @@ picoCTF{cu7_7h3_bl047_33e4341f}
 
 Flag: `picoCTF{cu7_7h3_bl047_33e4341f}`
 
-# **Web Exploitation**
+# Web Exploitation
 - [Includes](./picoCTF_2022.md#Includes)
 - [Inspect HTML](./picoCTF_2022.md#Inspect-html)
 - [Local Authority](./picoCTF_2022.md#Local-Authority)
@@ -998,9 +1004,9 @@ Flag: `picoCTF{cu7_7h3_bl047_33e4341f}`
 - [SQL Direct](./picoCTF_2022.md#SQL-Direct)
 - [SQLiLite](./picoCTF_2022.md#SQLiLite)
 
-## **Includes**
+## Includes
 
-### ***Description***
+### *Description*
 Can you get the flag? <br>
 Go to this [website](http://saturn.picoctf.net:54634/) and see what you can discover.
 <details>
@@ -1008,7 +1014,7 @@ Go to this [website](http://saturn.picoctf.net:54634/) and see what you can disc
     Is there more code than what the inspector initially shows?
 </details>
 
-### ***Writeup***
+### *Writeup*
 Inspect `style.css` and `script.js` for parts of the flag
 
 `style.css`:
@@ -1031,9 +1037,9 @@ function greetings()
 
 Flag: `picoCTF{1nclu51v17y_1of2_f7w_2of2_df589022}`
 
-## **Inspect HTML**
+## Inspect HTML
 
-### ***Description***
+### *Description*
 Can you get the flag? <br>
 Go to this [website](http://saturn.picoctf.net:50920/) and see what you can discover.
 <details>
@@ -1041,7 +1047,7 @@ Go to this [website](http://saturn.picoctf.net:50920/) and see what you can disc
     What is the web inspector in web browsers?
 </details>
 
-### ***Writeup***
+### *Writeup*
 Inspect the HTML source code
 
 `index.html`:
@@ -1072,17 +1078,18 @@ Inspect the HTML source code
 
 Flag: `picoCTF{1n5p3t0r_0f_h7ml_1fd8425b}`
 
-## **Local Authority**
+## Local Authority
 
-### ***Description***
+### *Description*
 Can you get the flag? <br>
 Go to this [website](http://saturn.picoctf.net:65317/) and see what you can discover.
+
 <details>
     <summary>Hint 1</summary>
     How is the password checked on this website?
 </details>
 
-### ***Writeup***
+### *Writeup*
 Inspect the HTML source code. Notice that the form is processed in login.php, so there are two ways of getting to login.php. Either give incorrect credentials or go to `http://saturn.picoctf.net:65317/login.php`. After inspecting the php, notice that `checkPassword` will return true if the username is `admin` and the password is `strongPassword098765`. Going back to the login site and giving the correct username and password will give the flag.
 
 `login.php`:
@@ -1163,9 +1170,9 @@ function checkPassword(username, password)
 ```
 Flag: `picoCTF{j5_15_7r4n5p4r3n7_8086bcb1}`
 
-## **Search source**
+## Search source
 
-### ***Description***
+### *Description*
 The developer of this website mistakenly left an important artifact in the website source, can you find it? <br>
 The website is [here](http://saturn.picoctf.net:58519/)
 <details>
@@ -1173,7 +1180,7 @@ The website is [here](http://saturn.picoctf.net:58519/)
     How could you mirror the website on your local machine so you could use more powerful tools for searching?
 </details>
 
-### ***Writeup***
+### *Writeup*
 Download the website as well as the dependencies using `wget -r`, which will recursively download all the files. After running `wget -r http://saturn.picoctf.net:58519/`, running `grep -r picoCTF{ saturn.picoctf.net\:58519/` to recursively search in the cloned directory showed a match in the `css/styles.css` file.
 
 ```
@@ -1188,23 +1195,23 @@ saturn.picoctf.net:58519/css/style.css:/** banner_main picoCTF{1nsp3ti0n_0f_w3bp
 
 Flag: `picoCTF{1nsp3ti0n_0f_w3bpag3s_869d23af}`
 
-## **Forbidden Paths**
+## Forbidden Paths
 
-### ***Description***
+### *Description*
 Can you get the flag? <br>
 Here's the [website](http://saturn.picoctf.net:52523/). <br>
 We know that the website files live in `/usr/share/nginx/html/` and the flag is at `/flag.txt` but the website is filtering absolute file paths. Can you get past the filter to read the flag?
 
-### ***Writeup***
+### *Writeup*
 On the webpage, notice that giving any of the filenames on the site (`divine-comedy.txt`, `oliver-twist.txt`, and `the-happy-prince.txt`) will print the contents of that file. For example, putting in `divine-comedy.txt` most likely will do `cat /usr/share/nginx/html/divine-comedy.txt`. Also notice that the first "file" on the list is `..`, and putting that in gives a blank page. This is a good thing, as it's trying to print the contents of `/usr/share/nginx/html/..`, which is just a directory.
 
 Giving the input `..` will go back one directory, so the webpage will print `/usr/share/nginx/`. Giving the input `../..` will print `/usr/share/`, `../../..` will print `/usr/`, `../../../..` will print `/`, and finally `../../../../flag.txt` will print the contents of `/flag.txt`. This type of attack is called a [path traversal attack](https://en.wikipedia.org/wiki/Directory_traversal_attack).
 
 Flag: `picoCTF{7h3_p47h_70_5ucc355_e73ad00d}`
 
-## **Power Cookie**
+## Power Cookie
 
-### ***Description***
+### *Description*
 Can you get the flag? <br>
 Go to this [website](http://saturn.picoctf.net:55771/) and see what you can discover.
 <details>
@@ -1212,7 +1219,7 @@ Go to this [website](http://saturn.picoctf.net:55771/) and see what you can disc
     Do you know how to modify cookies?
 </details>
 
-### ***Writeup***
+### *Writeup*
 Going to the website there is a button that says `Continue as guest`, and going to it goes to `check.php` and a screen that says `We apologize, but we have no guest services at the moment.`. Looking at the cookies on Firefox by opening Web Developer Tools (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>) and going to Cookies under Storage, I see there is a cookie called isAdmin with a value of 0. Changing the value from 0 to 1 and refreshing the page gives the flag.
 
 ![firefox-developer-tools](./Web_Exploitation/Power_Cookie/firefox-developer-tools.png)
@@ -1223,13 +1230,13 @@ Same idea for Google Chrome except Cookies are under Storage which is under Appl
 
 Flag: `picoCTF{gr4d3_A_c00k13_80bad8fa}`
 
-## **Roboto Sans**
+## Roboto Sans
 
-### ***Description***
+### *Description*
 The flag is somewhere on this web application not necessarily on the website. Find it. <br>
 Check [this](http://saturn.picoctf.net:55983/) out.
 
-### ***Writeup***
+### *Writeup*
 Looking at the title of the challenge, I assume I would have to look at the `robots.txt` file on the webpage, so I went ahead and did that.
 
 ```
@@ -1261,9 +1268,9 @@ The first and third string was unsuccessful in being decoded, but the second lin
 
 Flag: `picoCTF{Who_D03sN7_L1k5_90B0T5_6ac64608}`
 
-## **Secrets**
+## Secrets
 
-### ***Description***
+### *Description*
 We have several pages hidden. Can you find the one with the flag? <br>
 The website is running [here](http://saturn.picoctf.net:52114/).
 <details>
@@ -1271,7 +1278,7 @@ The website is running [here](http://saturn.picoctf.net:52114/).
     folders folders folders
 </details>
 
-### ***Writeup***
+### *Writeup*
 Going to the page and looking at the source code, I notice that both the `index.css` and `DX1KYM.jpg` files are under the `/secret/assets/` directory. I then checked if an `index.html` file existed under that directory since that is generally the most important file on a webpage, and there is no match. I stepped back a directory, and luckily there was a `secret/index.html` file.
 
 The page has text that says `Finally. You almost found me. you are doing well`, which means I am getting closer but I am not there yet. Looking at the source code of that shows the page uses `hidden/file.css`. I checked if `secret/hidden/index.html` existed, and I got a match. 
@@ -1282,19 +1289,20 @@ I also used `dirb` (`sudo apt install dirb`) which is a web-content scanner that
 
 Flag: `picoCTF{succ3ss_@h3n1c@10n_f55d602d}`
 
-## **SQL Direct**
+## SQL Direct
 
-### ***Description***
-<button name="button" onclick="http://www.google.com">Launch Instance</button> <br>
+### *Description*
+<button name="button">Launch Instance</button> <br>
 Connect to this PostgreSQL server and find the flag! <br>
 `psql -h saturn.picoctf.net -p 60772 -U postgres pico` <br>
 Password is `postgres`
+
 <details>
     <summary>Hint 1</summary>
     What does a SQL database contain?
 </details>
 
-### ***Writeup***
+### *Writeup*
 First install PostgreSQL (`sudo apt-get install postgresql-client`), and then log in to the server. Get a list of all the schemas by doing `\dt`. I see there's only one schema called `flags`, so I decided to print the whole table by running `SELECT * FROM flags` which printed the firstname, lastname, and address column, one of which is the flag.
 
 ```
@@ -1321,18 +1329,19 @@ pico=# SELECT * FROM flags;
 
 Flag: `picoCTF{L3arN_S0m3_5qL_t0d4Y_34fa2564}`
 
-## **SQLiLite**
+## SQLiLite
 
-### ***Description***
-<button name="button" onclick="http://www.google.com">Launch Instance</button> <br>
+### *Description*
+<button name="button">Launch Instance</button> <br>
 Can you login to this website? <br>
 Try to login [here](http://saturn.picoctf.net:59901/).
+
 <details>
     <summary>Hint 1</summary>
     `admin` is the user you want to login as.
 </details>
 
-### ***Writeup***
+### *Writeup*
 The website brings to a Log In page that I assume stores the username and password in a SQL database. Typing in `a` for both the username and password shows a page that says `Login Failed`, but it also shows an SQL query above that says `SELECT * FROM users WHERE name='a' AND password='a'
 `. If I give a username that is `' OR 1=1 --` and no input for the password, the query then becomes `SELECT * FROM users WHERE name='' OR 1=1--' AND password=''`. 
 
