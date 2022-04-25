@@ -32,6 +32,7 @@ We found this weird message being passed around on the servers, we think we have
 Download the message [here](https://artifacts.picoctf.net/c/393/message.txt). <br>
 Take each number mod 37 and map it to the following character set: 0-25 is the alphabet (uppercase), 26-35 are the decimal digits, and 36 is an underscore. <br>
 Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_message}`)
+
 <details>
     <summary>Hint 1</summary>
     Do you know what <code>mod 37</code> means?
@@ -64,6 +65,7 @@ A new modular challenge! <br>
 Download the message [here](https://artifacts.picoctf.net/c/499/message.txt). <br>
 Take each number mod 41 and find the modular inverse for the result. Then map to the following character set: 1-26 are the alphabet, 27-36 are the decimal digits, and 37 is an underscore. <br>
 Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_message}`)
+
 <details>
     <summary>Hint 1</summary>
     Do you know what the modular inverse is?
@@ -99,6 +101,7 @@ Flag: `picoCTF{1NV3R53LY_H4RD_C680BDC1}`
 We found a leak of a blackmarket website's login credentials. Can you find the password of the user `cultiris` and successfully decrypt it? <br>
 Download the leak [here](https://artifacts.picoctf.net/c/534/leak.tar). <br>
 The first user in `usernames.txt` corresponds to the first password in `passwords.txt`. The second user corresponds to the second password, and so on.
+
 <details>
     <summary>Hint 1</summary>
     Maybe other passwords will have hints about the leak?
@@ -144,6 +147,7 @@ Flag: `picoCTF{1NV3R53LY_H4RD_C680BDC1}`
 Morse code is well known. Can you decrypt this? <br>
 Download the file [here](https://artifacts.picoctf.net/c/235/morse_chal.wav). <br>
 Wrap your answer with picoCTF{}, put underscores in place of pauses, and use all lowercase.
+
 <details>
     <summary>Hint 1</summary>
     Audacity is a really good program to analyze morse code audio.
@@ -181,6 +185,7 @@ Flag: `picoCTF{wh47_h47h_90d_w20u9h7}`
 A type of transposition cipher is the rail fence cipher, which is described [here](https://en.wikipedia.org/wiki/Rail_fence_cipher). Here is one such cipher encrypted using the rail fence with 4 rails. Can you decrypt it? <br>
 Download the message [here](https://artifacts.picoctf.net/c/275/message.txt). <br>
 Put the decoded message in the picoCTF flag format, `picoCTF{decoded_message}`.
+
 <details>
     <summary>Hint 1</summary>
     Once you've understood how the cipher works, it's best to draw it out yourself on paper
@@ -203,6 +208,7 @@ Flag: `picoCTF{WH3R3_D035_7H3_F3NC3_8361N_4ND_3ND_EB4C7D74}`
 ### *Description*
 A message has come in but it seems to be all scrambled. Luckily it seems to have the key at the beginning. Can you crack this substitution cipher? <br>
 Download the message [here](https://artifacts.picoctf.net/c/379/message.txt).
+
 <details>
     <summary>Hint 1</summary>
     Try a frequency attack. An online tool might help.
@@ -251,6 +257,7 @@ Flag: `picoCTF{5UB5717U710N_3V0LU710N_59533A2E}`
 ### *Description*
 A second message has come in the mail, and it seems almost identical to the first one. Maybe the same thing will work again.
 Download the message [here](https://artifacts.picoctf.net/c/414/message.txt).
+
 <details>
     <summary>Hint 1</summary>
     Try a frequency attack
@@ -283,6 +290,7 @@ Flag: `picoCTF{FR3QU3NCY_4774CK5_4R3_C001_4871E6FB}`
 ### *Description*
 It seems that another encrypted message has been intercepted. The encryptor seems to have learned their lesson though and now there isn't any punctuation! Can you still crack the cipher? <br>
 Download the message [here](https://artifacts.picoctf.net/c/107/message.txt).
+
 <details>
     <summary>Hint 1</summary>
     Try refining your frequency attack, maybe analyzing groups of letters would improve your results?
@@ -309,6 +317,7 @@ Flag: `picoCTF{N6R4M_4N41Y515_15_73D10U5_8E1BF808}`
 ### *Description*
 Our data got corrupted on the way here. Luckily, nothing got replaced, but every block of 3 got scrambled around! The first word seems to be three letters long, maybe you can use that to recover the rest of the message. <br>
 Download the corrupted message [here](https://artifacts.picoctf.net/c/459/message.txt).
+
 <details>
     <summary>Hint 1</summary>
     Split the message up into blocks of 3 and see how the first block is scrambled
@@ -329,6 +338,7 @@ Flag: `picoCTF{7R4N5P051N6_15_3XP3N51V3_5C82A0E0}`
 ### *Description*
 Can you decrypt this message?
 Decrypt this [message](https://artifacts.picoctf.net/c/527/cipher.txt) using this key "CYLAB".
+
 <details>
     <summary>Hint 1</summary>
     https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
@@ -356,6 +366,7 @@ Flag: `picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}`
 Alice and Bob wanted to exchange information secretly. The two of them agreed to use the Diffie-Hellman key exchange algorithm, using p = 13 and g = 5. They both chose numbers secretly where Alice chose 7 and Bob chose 3. Then, Alice sent Bob some encoded text (with both letters and digits) using the generated key as the shift amount for a Caesar cipher over the alphabet and the decimal digits. Can you figure out the contents of the message? <br>
 Download the message [here](https://artifacts.picoctf.net/c/452/message.txt). <br>
 Wrap your decrypted message in the picoCTF flag format like: `picoCTF{decrypted_message}`
+
 <details>
     <summary>Hint 1</summary>
     Diffie-Hellman key exchange is a well known algorithm for generating keys, try looking up how the secret key is generated
@@ -427,6 +438,7 @@ Flag: `picoCTF{3nh4nc3d_6783cc46}`
 ### *Description*
 This file was found among some files marked confidential but my pdf reader cannot read it, maybe yours can. <br>
 You can download the file from [here](https://artifacts.picoctf.net/c/326/Flag.pdf).
+
 <details>
     <summary>Hint 1</summary>
     Remember that some file types can contain and nest other files
@@ -571,6 +583,7 @@ Flag: `picoCTF{f1len@m3_m@n1pul@t10n_f0r_0b2cur17y_347eae65}`
 ### *Description*
 Attackers have hidden information in a very large mass of data in the past, maybe they are still doing it. <br>
 Download the data [here](https://artifacts.picoctf.net/c/297/anthem.flag.txt).
+
 <details>
     <summary>Hint 1</summary>
     Download the file and search for the flag based on the known prefix.
@@ -591,6 +604,7 @@ Flag: `picoCTF{gr3p_15_@w3s0m3_4554f5f5}`
 ### *Description*
 Download the packet capture file and use packet analysis software to find the flag.
 - [Download packet capture](https://artifacts.picoctf.net/c/202/network-dump.flag.pcap)
+
 <details>
     <summary>Hint 1</summary>
     Wireshark, if you can install and use it, is probably the most beginner friendly packet analysis software product.
@@ -613,6 +627,7 @@ Flag: `picoCTF{p4ck37_5h4rk_d0565941}`
 ### *Description*
 Now you DON’T see me. <br>
 This [report](https://artifacts.picoctf.net/c/264/Financial_Report_for_ABC_Labs.pdf) has some critical data in it, some of which have been redacted correctly, while some were not. Can you find an important key that was not redacted properly?
+
 <details>
     <summary>Hint 1</summary>
     How can you be sure of the redaction?
@@ -689,6 +704,7 @@ Flag: `picoCTF{mm15_f7w!}`
 ### *Description*
 Download this image and find the flag. <br>
 - [Download image](https://artifacts.picoctf.net/c/424/pico.flag.png)
+
 <details>
     <summary>Hint 1</summary>
     We know the end sequence of the message will be `$t3g0`.
@@ -762,6 +778,7 @@ Flag: `picoCTF{U51N6_Y0Ur_F1r57_F113_102c30db}`
 ### *Description*
 Another program, but this time, it seems to want some input. What happens if you try to run it on the command line with input "Hello!"?
 Download the program [here](https://artifacts.picoctf.net/c/354/run).
+
 <details>
     <summary>Hint 1</summary>
     Try running it and add the phrase "Hello!" with a space in front (i.e. "./run Hello!")
@@ -948,6 +965,7 @@ Flag: `picoCTF{d30bfu5c4710n_f7w_2769cf94}`
 ### *Description*
 Can you get the flag? <br>
 Reverse engineer this [Java program](https://artifacts.picoctf.net/c/210/KeygenMe.class).
+
 <details>
     <summary>Hint 1</summary>
     Use a decompiler for Java!
@@ -1009,6 +1027,7 @@ Flag: `picoCTF{cu7_7h3_bl047_33e4341f}`
 ### *Description*
 Can you get the flag? <br>
 Go to this [website](http://saturn.picoctf.net:54634/) and see what you can discover.
+
 <details>
     <summary>Hint 1</summary>
     Is there more code than what the inspector initially shows?
@@ -1042,6 +1061,7 @@ Flag: `picoCTF{1nclu51v17y_1of2_f7w_2of2_df589022}`
 ### *Description*
 Can you get the flag? <br>
 Go to this [website](http://saturn.picoctf.net:50920/) and see what you can discover.
+
 <details>
     <summary>Hint 1</summary>
     What is the web inspector in web browsers?
@@ -1175,6 +1195,7 @@ Flag: `picoCTF{j5_15_7r4n5p4r3n7_8086bcb1}`
 ### *Description*
 The developer of this website mistakenly left an important artifact in the website source, can you find it? <br>
 The website is [here](http://saturn.picoctf.net:58519/)
+
 <details>
     <summary>Hint 1</summary>
     How could you mirror the website on your local machine so you could use more powerful tools for searching?
@@ -1214,6 +1235,7 @@ Flag: `picoCTF{7h3_p47h_70_5ucc355_e73ad00d}`
 ### *Description*
 Can you get the flag? <br>
 Go to this [website](http://saturn.picoctf.net:55771/) and see what you can discover.
+
 <details>
     <summary>Hint 1</summary>
     Do you know how to modify cookies?
@@ -1273,6 +1295,7 @@ Flag: `picoCTF{Who_D03sN7_L1k5_90B0T5_6ac64608}`
 ### *Description*
 We have several pages hidden. Can you find the one with the flag? <br>
 The website is running [here](http://saturn.picoctf.net:52114/).
+
 <details>
     <summary>Hint 1</summary>
     folders folders folders
