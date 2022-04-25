@@ -6,23 +6,23 @@ A beginner-style CTF hosted on picoGym at https://play.picoctf.org/practice?orig
 
 | Categories                                                   | Completed | Progress                                                     |
 | ------------------------------------------------------------ | --------- | ------------------------------------------------------------ |
-| [Binary Exploitation](#Binary_Exploitation/Binary_Exploitation.md) | 6/14      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/43) |
-| [Cryptography](#Cryptography)                                | 10/14     | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/71) |
-| [Forensics](#Forensics)                                      | 7/13      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/54) |
-| [Reverse Engineering](#Reverse-Engineering)                  | 9/12      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/75) |
-| [Web Exploitation](#Web-Exploitation)                        | 10/12     | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/83) |
+| [Binary Exploitation](binary_exploitation/binary_exploitation.md) | 6/14      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/43) |
+| [Cryptography](#cryptography)                                | 10/14     | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/71) |
+| [Forensics](#forensics)                                      | 7/13      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/54) |
+| [Reverse Engineering](#reverse-engineering)                  | 9/12      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/75) |
+| [Web Exploitation](#web-exploitation)                        | 10/12     | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/83) |
 
 # Cryptography
-- [basic-mod1](#basic-mod1)
-- [basic-mod2](#basic-mod2)
-- [credstuff](#credstuff)
-- [morse-code](#morse-code)
-- [rail-fence](#rail-fence)
-- [substitution0](#substitution0)
-- [substitution1](#substitution1)
-- [substitution2](#substitution2)
-- [transposition-trial](#transposition-trial)
-- [Vigenere](#Vigenere)
+- [basic-mod1 (100)](#basic-mod1)
+- [basic-mod2 (100)](#basic-mod2)
+- [credstuff (100)](#credstuff)
+- [morse-code (100)](#morse-code)
+- [rail-fence (100)](#rail-fence)
+- [substitution0 (100)](#substitution0)
+- [substitution1 (100)](#substitution1)
+- [substitution2 (100)](#substitution2)
+- [transposition-trial (100)](#transposition-trial)
+- [Vigenere (100)](#vigenere)
 - [diffie-hellman](#diffie-hellman)
 
 ## basic-mod1
@@ -402,16 +402,16 @@ Shift 5 forwards: MEDFE1_MBZRD1_BF_E_IBH_A4HNEHDN_CNLPADPH
 Shift 5 backwards: C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7
 ```
 
-Flag: `C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7`
+Flag: `picoCTF{C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7}`
 
 # Forensics
-- [Enhance!](#Enhance)
-- [File types](#File-types)
-- [Lookey here](#Lookey-here)
-- [Packets Primer](#Packets-Primer)
-- [Redaction gone wrong](#Redaction-gone-wrong)
-- [Sleuthkit Intro](#Sleuthkit-Intro)
-- [St3g0](#St3g0)
+- [Enhance! (100)](#enhance)
+- [File types (100)](#file-types)
+- [Lookey here (100)](#lookey-here)
+- [Packets Primer (100)](#packets-primer)
+- [Redaction gone wrong (100)](#redaction-gone-wrong)
+- [Sleuthkit Intro (100)](#sleuthkit-intro)
+- [St3g0 (300)](#st3g0)
 
 ## Enhance!
 
@@ -735,15 +735,15 @@ b4,abgr,lsb,xy      .. file: Novell LANalyzer capture file
 Flag: `picoCTF{7h3r3_15_n0_5p00n_1b8d71db}`
 
 # Reverse Engineering
-- [file-run1](./picoCTF_2022.md#file-run1)
-- [file-run2](./picoCTF_2022.md#file-run2)
-- [GDB Test Drive](./picoCTF_2022.md#GDB-Test-Drive)
-- [patchme.py](./picoCTF_2022.md#patchmepy)
-- [Safe Opener](./picoCTF_2022.md#Safe-Opener)
-- [unpackme.py](./picoCTF_2022.md#unpackmepy)
-- [bloat.py](./picoCTF_2022.md#bloatpy)
-- [Fresh Java](./picoCTF_2022.md#Fresh-Java)
-- [Bbbbloat](./picoCTF_2022.md#Bbbbloat)
+- [file-run1 (100)](#file-run1)
+- [file-run2 (100)](#file-run2)
+- [GDB Test Drive (100)](#gdb-test-drive)
+- [patchme.py (100)](#patchmepy)
+- [Safe Opener (100)](#safe-opener)
+- [unpackme.py (100)](#unpackmepy)
+- [bloat.py (200)](#bloatpy)
+- [Fresh Java (200)](#fresh-java)
+- [Bbbbloat (300)](#bbbbloat)
 
 ## file-run1
 
@@ -1011,16 +1011,16 @@ picoCTF{cu7_7h3_bl047_33e4341f}
 Flag: `picoCTF{cu7_7h3_bl047_33e4341f}`
 
 # Web Exploitation
-- [Includes](./picoCTF_2022.md#Includes)
-- [Inspect HTML](./picoCTF_2022.md#Inspect-html)
-- [Local Authority](./picoCTF_2022.md#Local-Authority)
-- [Search source](./picoCTF_2022.md#Search-source)
-- [Forbidden Paths](./picoCTF_2022.md#Forbidden-Paths)
-- [Power Cookie](./picoCTF_2022.md#Power-Cookie)
-- [Roboto Sans](./picoCTF_2022.md#Roboto-Sans)
-- [Secrets](./picoCTF_2022.md#Secrets)
-- [SQL Direct](./picoCTF_2022.md#SQL-Direct)
-- [SQLiLite](./picoCTF_2022.md#SQLiLite)
+- [Includes (100)](#includes)
+- [Inspect HTML (100)](#inspect-html)
+- [Local Authority (100)](#local-authority)
+- [Search source (100)](#search-source)
+- [Forbidden Paths (200)](#forbidden-paths)
+- [Power Cookie (200)](#power-cookie)
+- [Roboto Sans (200)](#roboto-sans)
+- [Secrets (200)](#secrets)
+- [SQL Direct (200)](#sql-direct)
+- [SQLiLite (300)](#sqlilite)
 
 ## Includes
 
