@@ -6,11 +6,11 @@ A beginner-style CTF hosted on picoGym at https://play.picoctf.org/practice?orig
 
 | Categories                                                   | Completed | Progress                                                     |
 | ------------------------------------------------------------ | --------- | ------------------------------------------------------------ |
-| [Binary Exploitation](binary_exploitation/binary_exploitation.md) | 6/14      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/43) |
-| [Cryptography](#cryptography)                                | 10/14     | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/71) |
-| [Forensics](#forensics)                                      | 7/13      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/54) |
-| [Reverse Engineering](#reverse-engineering)                  | 9/12      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/75) |
-| [Web Exploitation](#web-exploitation)                        | 10/12     | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/83) |
+| [Binary Exploitation](Binary_Exploitation/Binary_Exploitation.md) | 9/14      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/64) |
+| [Cryptography](#Cryptography)                                | 10/14     | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/71) |
+| [Forensics](#Forensics)                                      | 7/13      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/54) |
+| [Reverse Engineering](#Reverse-Engineering)                  | 9/12      | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/75) |
+| [Web Exploitation](#Web-Exploitation)                        | 10/12     | ![](https://us-central1-progress-markdown.cloudfunctions.net/progress/83) |
 
 # Cryptography
 - [basic-mod1 (100)](#basic-mod1)
@@ -22,7 +22,7 @@ A beginner-style CTF hosted on picoGym at https://play.picoctf.org/practice?orig
 - [substitution1 (100)](#substitution1)
 - [substitution2 (100)](#substitution2)
 - [transposition-trial (100)](#transposition-trial)
-- [Vigenere (100)](#vigenere)
+- [Vigenere (100)](#Vigenere)
 - [diffie-hellman](#diffie-hellman)
 
 ## basic-mod1
@@ -43,14 +43,28 @@ Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_
 </details>
 
 ### *Writeup*
-Make a [python script](./Cryptography/basic-mod1/basic_mod1.py) that will parse the text file and mod every number.
+Make a python script that will parse the text file and mod every number.
 
-`message.txt`:
-```bash
-└─$ cat message.txt
-54 396 131 198 225 258 87 258 128 211 57 235 114 258 144 220 39 175 330 338 297 288
+Code for `basic-mod1.py`:
+
+```python
+with open('message.txt') as f:
+    contents = f.read()
+    ret = ''
+    for i in contents.split():
+        n = int(i) % 37
+        if n <= 25:
+            ret += chr(n+65)
+        elif 26 <= n <= 35:
+            ret += str(n-26)
+        else:
+            ret += '_'
+    ret = 'picoCTF{'+ret+'}'
+    print(ret)
 ```
-output of `basic_mod1.py`:
+
+Terminal output:
+
 ```bash
 └─$ python3 basic_mod1.py
 picoCTF{R0UND_N_R0UND_79C18FB3}
@@ -80,14 +94,28 @@ Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_
 </details>
 
 ### *Writeup*
-Make a [python script](./Cryptography/basic-mod2/basic_mod2.py) that will parse the text file and mod every number and then find the modular inverse using `pow(a,-1,x)`.
+Make a python script that will parse the text file and mod every number and then find the modular inverse using `pow(a,-1,x)`.
 
-`message.txt`:
-```bash
-└─$ cat message.txt
-268 413 110 190 426 419 108 229 310 379 323 373 385 236 92 96 169 321 284 185 154 137 186
+Code for `basic-mod2.py`:
+
+```python
+with open('message.txt') as f:
+    contents = f.read()
+    ret = ''
+    for i in contents.split():
+        n = pow(int(i)%41, -1, 41)
+        if n <= 26:
+            ret += chr(n+64)
+        elif 27 <= n <= 36:
+            ret += str(n-27)
+        else:
+            ret += '_'
+    ret = 'picoCTF{'+ret+'}'
+    print(ret)
 ```
-output of `basic_mod2.py`:
+
+Terminal output:
+
 ```bash
 └─$ python3 basic_mod2.py
 picoCTF{1NV3R53LY_H4RD_C680BDC1}
@@ -111,7 +139,7 @@ The first user in `usernames.txt` corresponds to the first password in `password
 
 First thing to do is extract the tar file using `tar -xvf leak.tar` and then change directory into the extracted folder.
 
-```
+```bash
 └─$ tar -xvf leak.tar
 leak/
 leak/passwords.txt
@@ -120,21 +148,21 @@ leak/usernames.txt
 
 Use `grep -n` to not only find the user `cultiris` in `usernames.txt`, but also the line number of that user in the text file (this only works if the first user and the first password is on line 1 of their respective files).
 
-```
+```bash
 └─$ grep -n cultiris usernames.txt
 378:cultiris
 ```
 
 Then, use `sed -n NUMp`, where NUM is the line number, and `p` to print the contents at that line number.
 
-```
+```bash
 └─$ sed -n '378p' < passwords.txt
 cvpbPGS{P7e1S_54I35_71Z3}
 ```
 
 This looks like the flag, but isn't the flag since it does not start with picoCTF. It is actually encrypted in ROT13, so the last step is to transform the password.
 
-```
+```bash
 └─$ sed -n '378p' < passwords.txt | tr 'A-Za-z' 'N-ZA-Mn-za-m'
 picoCTF{C7r1F_54V35_71M3}
 ```
@@ -156,7 +184,7 @@ Wrap your answer with picoCTF{}, put underscores in place of pauses, and use all
 ### *Writeup*
 After analyzing the wav file using Audacity, I can see that the waveform is split by either short or long waves. The short ones are dots and the long ones are dashes. After writing down the morse code, I used an [online morse code translator](https://morsecode.world/international/translator.html) to convert the message.
 
-```
+```bash
 └─$ audacity morse_chal.wav
 ```
 
@@ -167,7 +195,7 @@ After analyzing the wav file using Audacity, I can see that the waveform is spli
 ```
 morse code: `WH47 H47H 90D W20U9H7`
 
-```
+```bash
 └─$ python3
 Python 3.9.10 (main, Feb 22 2022, 13:54:07)
 [GCC 11.2.0] on linux
@@ -215,26 +243,34 @@ Download the message [here](https://artifacts.picoctf.net/c/379/message.txt).
 </details>
 
 ### *Writeup*
-Make a [python script](./Cryptography/substitution0/substitution0.py) that will take the first line of the message and use it as the substitution key.
+Make a python script that will take the first line of the message and use it as the substitution key.
 
-`message.txt`:
-```
-└─$ cat message.txt
-EKSZJTCMXOQUDYLFABGPHNRVIW
+Code for `substitution0.py`:
 
-Mjbjhfly Ujcbeyz eblgj, rxpm e cbenj eyz gpepjui exb, eyz kblhcmp dj pmj kjjpuj
-tbld e cuegg segj xy rmxsm xp reg jysulgjz. Xp reg e kjehpxthu gsebekejhg, eyz, ep
-pmep pxdj, hyqylry pl yephbeuxgpg—lt slhbgj e cbjep fbxwj xy e gsxjypxtxs flxyp
-lt nxjr. Pmjbj rjbj prl blhyz kuesq gflpg yjeb lyj jvpbjdxpi lt pmj kesq, eyz e
-ulyc lyj yjeb pmj lpmjb. Pmj gseujg rjbj jvsjjzxycui mebz eyz culggi, rxpm euu pmj
-effjebeysj lt khbyxgmjz cluz. Pmj rjxcmp lt pmj xygjsp reg njbi bjdebqekuj, eyz,
-peqxyc euu pmxycg xypl slygxzjbepxly, X slhuz mebzui kuedj Ohfxpjb tlb mxg lfxyxly
-bjgfjspxyc xp.
+```python
+with open('message.txt') as f:
+    letter_key = f.readline()
+    contents = f.read()
+    ret = ''
+    letter_val = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    letter_map = {}
 
-Pmj tuec xg: fxslSPT{5HK5717H710Y_3N0UH710Y_59533E2J}
+    for i in range(26):
+        letter_map[letter_key[i]] = letter_val[i]
+
+    for i in contents:
+        if i.islower():
+            ret += letter_map.get(i.upper()).lower()
+        else:  
+            if i in letter_map:
+                ret += letter_map.get(i)
+            else:
+                ret += i
+    print(letter_key + ret)
 ```
-output of `substitution0.py`:
-```
+
+Terminal output:
+```bash
 └─$ python3 substitution0.py
 EKSZJTCMXOQUDYLFABGPHNRVIW
 
@@ -268,17 +304,37 @@ Download the message [here](https://artifacts.picoctf.net/c/414/message.txt).
 </details>
 
 ### *Writeup*
-Make a [python script](./Cryptography/substitution1/substitution1.py) and slowly replace letters. It started with knowing that the last sentence should have the string `picoCTF{` to knowing that the sentence should include `the flag is: picoCTF{`, and then figuring out that the message has to do with talking about CTFs. It was a lot of replacing letter by letter.
+Make a python script and slowly replace letters. It started with knowing that the last sentence should have the string `picoCTF{` to knowing that the sentence should include `the flag is: picoCTF{`, and then figuring out that the message has to do with talking about CTFs. It was a lot of replacing letter by letter.
 
 Quick note: since it's a substitution cipher which means each letter maps to another letter, it's better to use a hashmap (in this case a dictionary for python) since it has a lookup time of O(1), and it's better than having 26 if statements.
 
-`message.txt`:
+Code for `substitution1.py`:
+
+```python
+with open('message.txt') as f:
+    contents = f.read()
+    ret = ''
+    letter_key = 'XTIKSCAQDBPORYFZNUJELGHVMW'
+    letter_val = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    letter_map = {}
+
+    for i in range(26):
+        letter_map[letter_key[i]] = letter_val[i]
+
+    for i in contents:
+        if i.islower():
+            ret += letter_map.get(i.upper()).lower()
+        else:  
+            if i in letter_map:
+                ret += letter_map.get(i)
+            else:
+                ret += i
+    print(ret)
 ```
-└─$ cat message.txt
-IECj (jqfue cfu ixzelus eqs coxa) xus x emzs fc ifrzlesu jsiludem ifrzsededfy. Ifyesjexyej xus zusjsyesk hdeq x jse fc iqxoosyasj hqdiq esje eqsdu iusxedgdem, esiqydixo (xyk affaodya) jpdooj, xyk zuftosr-jfogdya xtdodem. Iqxoosyasj ljlxoom ifgsu x ylrtsu fc ixesafudsj, xyk hqsy jfogsk, sxiq mdsokj x jeudya (ixoosk x coxa) hqdiq dj jltrdeesk ef xy fyodys jifudya jsugdis. IECj xus x ausxe hxm ef osxuy x hdks xuuxm fc ifrzlesu jsiludem jpdooj dy x jxcs, osaxo sygdufyrsye, xyk xus qfjesk xyk zoxmsk tm rxym jsiludem auflzj xuflyk eqs hfuok cfu cly xyk zuxiedis. Cfu eqdj zuftosr, eqs coxa dj: zdifIEC{CU3NL3YIM_4774IP5_4U3_I001_4871S6CT}
-```
-output of `substitution1.py`:
-```
+
+Terminal output:
+
+```bash
 └─$ python3 substitution1.py
 CTFs (short for capture the flag) are a type of computer security competition. Contestants are presented with a set of challenges which test their creativity, technical (and googling) skills, and problem-solving ability. Challenges usually cover a number of categories, and when solved, each yields a string (called a flag) which is submitted to an online scoring service. CTFs are a great way to learn a wide array of computer security skills in a safe, legal environment, and are hosted and played by many security groups around the world for fun and practice. For this problem, the flag is: picoCTF{FR3QU3NCY_4774CK5_4R3_C001_4871E6FB}
 ```
@@ -297,15 +353,35 @@ Download the message [here](https://artifacts.picoctf.net/c/107/message.txt).
 </details>
 
 ### *Writeup*
-Make a [python script](./Cryptography/substitution2/substitution2.py) and slowly replace letters. It started with knowing that the last sentence should have the string `picoCTF{` to knowing that the sentence should include `theflagispicoCTF{`, and then guessing what some of the words might be using context clues. It was a lot of replacing letter by letter.
+Make a python script and slowly replace letters. It started with knowing that the last sentence should have the string `picoCTF{` to knowing that the sentence should include `theflagispicoCTF{`, and then guessing what some of the words might be using context clues. It was a lot of replacing letter by letter.
 
-`message.txt`:
+Code for `substitution2.py`:
+
+```python
+with open('message.txt') as f:
+    contents = f.read()
+    ret = ''
+    letter_key = 'QFMIJNCVEYDXBHZPTWUGSAKORL'
+    letter_val = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+    letter_map = {}
+
+    for i in range(26):
+        letter_map[letter_key[i]] = letter_val[i]
+
+    for i in contents:
+        if i.islower():
+            ret += letter_map.get(i.upper()).lower()
+        else:  
+            if i in letter_map:
+                ret += letter_map.get(i)
+            else:
+                ret += i
+    print(ret)
 ```
-└─$ cat message.txt
-gvjwjjoeugujajwqxzgvjwkjxxjugqfxeuvjivecvumvzzxmzbpsgjwujmswegrmzbpjgegezhuehmxsiehcmrfjwpqgwezgqhisumrfjwmvqxxjhcjgvjujmzbpjgegezhunzmsupwebqwexrzhurugjbuqibeheugwqgezhnshiqbjhgqxukvemvqwjajwrsujnsxqhibqwdjgqfxjudexxuvzkjajwkjfjxejajgvjpwzpjwpswpzujznqvecvumvzzxmzbpsgjwujmswegrmzbpjgegezheuhzgzhxrgzgjqmvaqxsqfxjudexxufsgqxuzgzcjgugsijhguehgjwjugjiehqhijomegjiqfzsgmzbpsgjwumejhmjijnjhueajmzbpjgegezhuqwjzngjhxqfzwezsuqnnqewuqhimzbjizkhgzwshhehcmvjmdxeuguqhijojmsgehcmzhnecumwepguznnjhujzhgvjzgvjwvqhieuvjqaexrnzmsujizhjopxzwqgezhqhiebpwzaeuqgezhqhizngjhvqujxjbjhguznpxqrkjfjxejajqmzbpjgegezhgzsmvehczhgvjznnjhueajjxjbjhguznmzbpsgjwujmswegreugvjwjnzwjqfjggjwajvemxjnzwgjmvjaqhcjxeubgzugsijhguehqbjwemqhvecvumvzzxunswgvjwkjfjxejajgvqgqhshijwugqhiehcznznnjhueajgjmvhelsjueujuujhgeqxnzwbzshgehcqhjnnjmgeajijnjhujqhigvqggvjgzzxuqhimzhnecswqgezhnzmsujhmzshgjwjiehijnjhueajmzbpjgegezhuizjuhzgxjqiugsijhgugzdhzkgvjewjhjbrqujnnjmgeajxrqugjqmvehcgvjbgzqmgeajxrgvehdxedjqhqggqmdjwpemzmgneuqhznnjhueajxrzwejhgjivecvumvzzxmzbpsgjwujmswegrmzbpjgegezhgvqgujjdugzcjhjwqgjehgjwjugehmzbpsgjwumejhmjqbzhcvecvumvzzxjwugjqmvehcgvjbjhzscvqfzsgmzbpsgjwujmswegrgzpelsjgvjewmswezuegrbzgeaqgehcgvjbgzjopxzwjzhgvjewzkhqhijhqfxehcgvjbgzfjggjwijnjhigvjewbqmvehjugvjnxqceupemzMGN{H6W4B_4H41R515_15_73I10S5_8J1FN808}
-```
-output of `substitution2.py`:
-```
+
+Terminal output:
+
+```bash
 └─$ python3 substitution2.py
 thereexistseveralotherwellestablishedhighschoolcomputersecuritycompetitionsincludingcyberpatriotanduscyberchallengethesecompetitionsfocusprimarilyonsystemsadministrationfundamentalswhichareveryusefulandmarketableskillshoweverwebelievetheproperpurposeofahighschoolcomputersecuritycompetitionisnotonlytoteachvaluableskillsbutalsotogetstudentsinterestedinandexcitedaboutcomputersciencedefensivecompetitionsareoftenlaboriousaffairsandcomedowntorunningchecklistsandexecutingconfigscriptsoffenseontheotherhandisheavilyfocusedonexplorationandimprovisationandoftenhaselementsofplaywebelieveacompetitiontouchingontheoffensiveelementsofcomputersecurityisthereforeabettervehiclefortechevangelismtostudentsinamericanhighschoolsfurtherwebelievethatanunderstandingofoffensivetechnizuesisessentialformountinganeffectivedefenseandthatthetoolsandconfigurationfocusencounteredindefensivecompetitionsdoesnotleadstudentstoknowtheirenemyaseffectivelyasteachingthemtoactivelythinklikeanattackerpicoctfisanoffensivelyorientedhighschoolcomputersecuritycompetitionthatseekstogenerateinterestincomputerscienceamonghighschoolersteachingthemenoughaboutcomputersecuritytopizuetheircuriositymotivatingthemtoexploreontheirownandenablingthemtobetterdefendtheirmachinestheflagispicoCTF{N6R4M_4N41Y515_15_73D10U5_8E1BF808}
 ```
@@ -324,9 +400,26 @@ Download the corrupted message [here](https://artifacts.picoctf.net/c/459/messag
 </details>
 
 ### *Writeup*
-Analyzing the corrupted message it seems that for every block of three characters, the first characters is moved to the end (so instead of 1 2 3 it got corrupted to 2 3 1). Make a [python script](./Cryptography/transposition-trial/transposition-trial.py) that will check every third character and move it two places back.
+Analyzing the corrupted message it seems that for every block of three characters, the first characters is moved to the end (so instead of 1 2 3 it got corrupted to 2 3 1). Make a python script that will check every third character and move it two places back.
 
+Code for `transposition-trial.py`:
+
+```python
+with open('message.txt') as f:
+    contents = f.read()
+    ret = ''
+
+    for i in range(len(contents)):
+        if i % 3 == 2:
+            ret = ret[:i-2] + contents[i] + ret[i-2:]
+        else:
+            ret += contents[i]
+    print(ret)
 ```
+
+Terminal output:
+
+```bash
 └─$ python3 transposition-trial.py
 The flag is picoCTF{7R4N5P051N6_15_3XP3N51V3_5C82A0E0}
 ```
@@ -345,15 +438,51 @@ Decrypt this [message](https://artifacts.picoctf.net/c/527/cipher.txt) using thi
 </details>
 
 ### *Writeup*
-Make a [python script](./Cryptography/Vigenere/vigenere.py) that will do the Vigenere Cipher. Used the [geeksforgeeks](https://www.geeksforgeeks.org/vigenere-cipher/) page for code reference and [dcode.fr](https://www.dcode.fr/vigenere-cipher) to verify.
+Make a python script that will do the Vigenere Cipher. Used the [geeksforgeeks](https://www.geeksforgeeks.org/vigenere-cipher/) page for code reference and [dcode.fr](https://www.dcode.fr/vigenere-cipher) to verify.
 
-`message.txt`:
+Code for `Vigenere.py`:
+
+```python
+def generateKey(string, key):
+    key = list(key)
+    if len(string) == len(key):
+        return(key)
+    else:
+        for i in range(len(string) -
+                       len(key)):
+            key.append(key[i % len(key)])
+    return("" . join(key))
+
+def originalText(cipher_text, key):
+    orig_text = []
+    key_counter = 0
+    for i in range(len(cipher_text)):
+        if cipher_text[i].isupper():
+            x = (ord(cipher_text[i]) -
+                ord(key[key_counter]) + 26) % 26
+            x += ord('A')
+            key_counter += 1
+            orig_text.append(chr(x))
+        elif cipher_text[i].islower():
+            x = (ord(cipher_text[i].upper()) -
+                ord(key[key_counter]) + 26) % 26
+            x += ord('A')
+            key_counter += 1
+            orig_text.append(chr(x).lower())
+        else:
+            orig_text.append(cipher_text[i])
+    return("" . join(orig_text))
+
+with open('cipher.txt') as f:
+    cipher_text = f.read()
+
+key = generateKey(cipher_text, 'CYLAB')
+print(originalText(cipher_text, key))
 ```
-└─$ cat cipher.txt
-rgnoDVD{O0NU_WQ3_G1G3O3T3_A1AH3S_a23a13a5}
-```
-output of `vigenere.py`:
-```
+
+Terminal output:
+
+```bash
 └─$ python3 vigenere.py cipher.txt CYLAB
 picoCTF{D0NT_US3_V1G3N3R3_C1PH3R_y23c13p5}
 ```
@@ -377,7 +506,7 @@ Wrap your decrypted message in the picoCTF flag format like: `picoCTF{decrypted_
 ### *Writeup*
 The challenge is to find the Caesar cipher shift, which is going to be the shared secret key in the [Diffie-Hellman key exchange](https://en.wikipedia.org/wiki/Diffie%E2%80%93Hellman_key_exchange). The information we have is `p = 13, g = 5, a = 7, b = 3`, and our goal is to find s where `A = g^a mod p, B = g^b mod p, and s = B^a mod p = A^b mod p`. We have `A = 5^7 mod 13 = 8`.
 
-```
+```bash
 └─$ python3
 Python 3.9.10 (main, Feb 22 2022, 13:54:07)
 [GCC 11.2.0] on linux
@@ -395,9 +524,8 @@ Since both s1 and s2 are 5, we are sure `s = 5` which is going to be out Caesar 
 
 Alternatively, you can try to do the shift through the terminal:
 
-```
-└─$ echo -en "Shift 5 forwards: "; cat message.txt | tr 'A-Z0-9' 'F-Z0-9A-E' ; echo -en "\nShift 5 backwards: "; cat mes
-sage.txt | tr 'F-Z0-9A-E' 'A-Z0-9'
+```bash
+└─$ echo -en "Shift 5 forwards: "; cat message.txt | tr 'A-Z0-9' 'F-Z0-9A-E' ; echo -en "\nShift 5 backwards: "; cat message.txt | tr 'F-Z0-9A-E' 'A-Z0-9'
 Shift 5 forwards: MEDFE1_MBZRD1_BF_E_IBH_A4HNEHDN_CNLPADPH
 Shift 5 backwards: C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7
 ```
@@ -405,13 +533,13 @@ Shift 5 backwards: C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7
 Flag: `picoCTF{C4354R_C1PH3R_15_4_817_0U7D473D_2DBF03F7}`
 
 # Forensics
-- [Enhance! (100)](#enhance)
-- [File types (100)](#file-types)
-- [Lookey here (100)](#lookey-here)
-- [Packets Primer (100)](#packets-primer)
-- [Redaction gone wrong (100)](#redaction-gone-wrong)
-- [Sleuthkit Intro (100)](#sleuthkit-intro)
-- [St3g0 (300)](#st3g0)
+- [Enhance! (100)](#Enhance)
+- [File types (100)](#File-types)
+- [Lookey here (100)](#Lookey-here)
+- [Packets Primer (100)](#Packets-Primer)
+- [Redaction gone wrong (100)](#Redaction-gone-wrong)
+- [Sleuthkit Intro (100)](#Sleuthkit-Intro)
+- [St3g0 (300)](#St3g0)
 
 ## Enhance!
 
@@ -425,7 +553,7 @@ First I tried viewing the SVG using eog (Eye of Gnome), but sadly even after vie
 The alternative to getting the string is to cat the SVG and analyze every text and try to piece it together.
 
 Starting InkScape on `drawing.flag.svg`:
-```
+```bash
 └─$ inkscape drawing.flag.svg
 ```
 
@@ -447,12 +575,12 @@ You can download the file from [here](https://artifacts.picoctf.net/c/326/Flag.p
 ### *Writeup*
 Downloading and then running `file Flag.pdf` shows that it's a shell archive text, and reading the comments at the top of the file shows that to run a shell archive (shar) file you do `sh FILE`.
 
-```
+```bash
 └─$ file Flag.pdf
 Flag.pdf: shell archive text
 ```
 
-```
+```bash
 └─$ cat Flag.pdf
 #!/bin/sh
 # This is a shell archive (produced by GNU sharutils 4.15.2).
@@ -464,14 +592,14 @@ Flag.pdf: shell archive text
 
 Running `sh Flag.pdf` will extract a file to the current directory called `flag`. If extracting errors and says `uudecode: not found`, install `sharutils` package using `sudo apt install sharutils`.
 
-```
+```bash
 └─$ sh Flag.pdf
 x - created lock directory _sh00048.
 x - extracting flag (text)
 x - removed lock directory _sh00048.
 ```
 
-```
+```bash
 └─$ file *
 flag:     current ar archive
 Flag.pdf: shell archive text
@@ -479,14 +607,14 @@ Flag.pdf: shell archive text
 
 The rest of this is really tedious and extracting nested files.
 
-```
+```bash
 └─$ ar -xv flag ; file *
 x - flag
 flag:     cpio archive
 Flag.pdf: shell archive text
 ```
 
-```
+```bash
 └─$ cpio -iuv < flag ; file *
 flag
 2 blocks
@@ -494,7 +622,7 @@ flag:     bzip2 compressed data, block size = 900k
 Flag.pdf: shell archive text
 ```
 
-```
+```bash
 └─$ bzip2 -dv flag ; file *
 bzip2: Can't guess original name for flag -- using flag.out
   flag:    done
@@ -502,7 +630,7 @@ flag.out: gzip compressed data, was "flag", last modified: Tue Mar 15 06:50:44 2
 Flag.pdf: shell archive text
 ```
 
-```
+```bash
 └─$ gunzip -vS .out flag.out ; file *
 flag.out:        -1.5% -- replaced with flag
 flag:     lzip compressed data, version: 1
@@ -510,7 +638,7 @@ Flag.pdf: shell archive text
 ```
 
 Have to install using `sudo apt install lzip`:
-```
+```bash
 └─$ lzip -dv flag ; file *
 lzip: Can't guess original name for 'flag' -- using 'flag.out'
   flag: done
@@ -518,8 +646,8 @@ flag.out: LZ4 compressed data (v1.4+)
 Flag.pdf: shell archive text
 ```
 
-Have to install using `sudo apt install lz4`
-```
+Have to install using `sudo apt install lz4`:
+```bash
 └─$ unlz4 -v flag.out flag ; mv flag flag.out ; file *
 *** LZ4 command line interface 64-bits v1.9.3, by Yann Collet ***
 flag.out             : decoded 264 bytes
@@ -527,7 +655,7 @@ flag.out: LZMA compressed data, non-streamed, size 253
 Flag.pdf: shell archive text
 ```
 
-```
+```bash
 └─$ unlzma -vS .out flag.out ; file *
 flag.out (1/1)
   100 %               264 B / 253 B = 1.043
@@ -535,8 +663,8 @@ flag:     lzop compressed data - version 1.040, LZO1X-1, os: Unix
 Flag.pdf: shell archive text
 ```
 
-Have to install using `sudo apt install lzop`
-```
+Have to install using `sudo apt install lzop`:
+```bash
 └─$ lzop -dvff flag ; file *
 decompressing flag into flag.raw
 flag:     lzop compressed data - version 1.040, LZO1X-1, os: Unix
@@ -544,7 +672,7 @@ Flag.pdf: shell archive text
 flag.raw: lzip compressed data, version: 1
 ```
 
-```
+```bash
 └─$ lzip -dv flag.raw ; file *
 lzip: Can't guess original name for 'flag.raw' -- using 'flag.raw.out'
   flag.raw: done
@@ -553,7 +681,7 @@ Flag.pdf:     shell archive text
 flag.raw.out: XZ compressed data, checksum CRC64
 ```
 
-```
+```bash
 └─$ unxz -vS .out flag.raw.out ; file *
 flag.raw.out (1/1)
   100 %               152 B / 110 B = 1.382
@@ -563,15 +691,15 @@ flag.raw: ASCII text
 ```
 
 Finally reached the end after 10 decompressions (I hate this). Printing teh contents of the flag.raw ASCII text file shows this:
-```
-└─# cat flag.raw
+```bash
+└─$ cat flag.raw
 7069636f4354467b66316c656e406d335f6d406e3170756c407431306e5f
 6630725f3062326375723137795f33343765616536357d0a
 ```
 
 All of that and it's still not the flag?? Looking at the string carefully though, every character is from 0-f, so it's most likely in hex. Converting from hex to ASCII should give the correct flag.
 
-```
+```bash
 └─$ cat flag.raw | xxd -r -p
 picoCTF{f1len@m3_m@n1pul@t10n_f0r_0b2cur17y_347eae65}
 ```
@@ -592,7 +720,7 @@ Download the data [here](https://artifacts.picoctf.net/c/297/anthem.flag.txt).
 ### *Writeup*
 Run `grep picoCTF{ anthem.flag.txt` in the terminal.
 
-```
+```bash
 └─$ grep picoCTF{ anthem.flag.txt
       we think that the men of picoCTF{gr3p_15_@w3s0m3_4554f5f5}
 ```
@@ -614,7 +742,7 @@ Download the packet capture file and use packet analysis software to find the fl
 Opening up the .pcap file using Wireshark and analyzing all the packets, the 4th packet has bytes that when converted to ASCII gives the flag.
 
 Starting Wireshark on `network-dump.flag.pcap`:
-```
+```bash
 └─$ wireshark network-dump.flag.pcap
 ```
 
@@ -636,7 +764,7 @@ This [report](https://artifacts.picoctf.net/c/264/Financial_Report_for_ABC_Labs.
 ### *Writeup*
 I recommend using a tool called `pdftotext` which can be found in `poppler-utils`, so go ahead and install that using `sudo apt install poppler-utils`.
 
-```
+```bash
 └─$ pdftotext -v Financial_Report_for_ABC_Labs.pdf
 pdftotext version 20.09.0
 Copyright 2005-2020 The Poppler Developers - http://poppler.freedesktop.org
@@ -645,7 +773,7 @@ Copyright 1996-2011 Glyph & Cog, LLC
 
 Running `pdftotext` will copy the contents in the pdf to a separate text file, so printing the text file should display everything, including all the text that was "redacted" in the PDF.
 
-```
+```bash
 └─$ cat Financial_Report_for_ABC_Labs.txt
 Financial Report for ABC Labs, Kigali, Rwanda for the year 2021.
 Breakdown - Just painted over in MS word.
@@ -671,12 +799,12 @@ Note: if you are using the webshell, download and extract the disk image into `/
 ### *Writeup*
 
 Not much to this challenge. Just extract the file and run `mmls` on it.
-```
+```bash
 └─$ gunzip -v disk.img.gz
 disk.img.gz:     71.7% -- replaced with disk.img
 ```
 
-```
+```bash
 └─$ mmls disk.img
 DOS Partition Table
 Offset Sector: 0
@@ -688,7 +816,7 @@ Units are in 512-byte sectors
 002:  000:000   0000002048   0000204799   0000202752   Linux (0x83)
 ```
 
-```
+```bash
 └─$ nc saturn.picoctf.net 52279
 What is the size of the Linux partition in the given disk image?
 Length in sectors: 202752
@@ -698,6 +826,48 @@ picoCTF{mm15_f7w!}
 ```
 
 Flag: `picoCTF{mm15_f7w!}`
+
+## Sleuthkit Apprentice
+
+### *Description*
+
+Download this disk image and find the flag.<br>Note: if you are using the webshell, download and extract the disk image into `/tmp` not your home directory.
+
+- [Download compressed disk image](https://artifacts.picoctf.net/c/330/disk.flag.img.gz)
+
+### *Writeup*
+
+The first method is to mount each partition independently and look through all the files to see if there are any flag hints.
+
+Running `mmls disk.flag.img` shows this:
+
+```bash
+└─$ mmls disk.flag.img
+DOS Partition Table
+Offset Sector: 0
+Units are in 512-byte sectors
+
+      Slot      Start        End          Length       Description
+000:  Meta      0000000000   0000000000   0000000001   Primary Table (#0)
+001:  -------   0000000000   0000002047   0000002048   Unallocated
+002:  000:000   0000002048   0000206847   0000204800   Linux (0x83)
+003:  000:001   0000206848   0000360447   0000153600   Linux Swap / Solaris x86 (0x82)
+004:  000:002   0000360448   0000614399   0000253952   Linux (0x83)
+```
+
+Create a temporary directory for where the partition can be loaded into, like `disk.flag`. Then, mount the partition but make sure to set the offset.
+
+```bash
+└─$ sudo mount -o loop,offset=$((512*2048)) disk.flag.img disk.flag
+```
+
+However, this method is inefficient, since 
+
+
+
+
+
+
 
 ## St3g0
 
@@ -713,7 +883,7 @@ Download this image and find the flag. <br>
 ### *Writeup*
 Use a steganography detection tool like zsteg, which you can get by running `sudo apt install ruby-dev` then `gem install zsteg`. Running zsteg on the png file shows the following on the console.
 
-```
+```bash
 └─$ zsteg pico.flag.png
 b1,r,lsb,xy         .. text: "~__B>+g?G@"
 b1,rgb,lsb,xy       .. text: "picoCTF{7h3r3_15_n0_5p00n_1b8d71db}$t3g0"
@@ -737,13 +907,13 @@ Flag: `picoCTF{7h3r3_15_n0_5p00n_1b8d71db}`
 # Reverse Engineering
 - [file-run1 (100)](#file-run1)
 - [file-run2 (100)](#file-run2)
-- [GDB Test Drive (100)](#gdb-test-drive)
+- [GDB Test Drive (100)](#GDB-Test-Drive)
 - [patchme.py (100)](#patchmepy)
-- [Safe Opener (100)](#safe-opener)
+- [Safe Opener (100)](#Safe-Opener)
 - [unpackme.py (100)](#unpackmepy)
 - [bloat.py (200)](#bloatpy)
-- [Fresh Java (200)](#fresh-java)
-- [Bbbbloat (300)](#bbbbloat)
+- [Fresh Java (200)](#Fresh-Java)
+- [Bbbbloat (300)](#Bbbbloat)
 
 ## file-run1
 
@@ -762,11 +932,11 @@ Download the program [here](https://artifacts.picoctf.net/c/311/run).
 
 ### *Writeup*
 Give permission to execute `run` (you might not need to do this):
-```
+```bash
 └─$ chmod +x run
 ```
 Execute the `run` program in the current directory:
-```
+```bash
 └─$ ./run
 The flag is: picoCTF{U51N6_Y0Ur_F1r57_F113_102c30db}
 ```
@@ -786,7 +956,7 @@ Download the program [here](https://artifacts.picoctf.net/c/354/run).
 
 ### *Writeup*
 Give permission to execute `run` and run the program with the argument "Hello!":
-```
+```bash
 └─$ ./run Hello!
 The flag is: picoCTF{F1r57_4rgum3n7_4653b5f6}
 ```
@@ -856,7 +1026,7 @@ Run this [Python program](https://artifacts.picoctf.net/c/389/patchme.flag.py) i
 ### *Writeup*
 Running `patchme.flag.py` will prompt the user for a password, which we do not have at the moment. After inspecting the python code however, lines 18-22 checks that the input that is written to `user_pw` matches a series of split strings. Piecing together the strings produces `ak98-=90adfjhgj321sleuth9000`, which is the password. Running `patchme.flag.py` again with the password gives the flag.
 
-```
+```bash
 └─$ python3 patchme.flag.py
 Please enter correct password for flag: ak98-=90adfjhgj321sleuth9000
 Welcome back... your flag, user:
@@ -878,7 +1048,7 @@ First, if running `java SafeOpener` does not work because the JDK is not install
 
 After looking at the java code, I notice that the input we pass into the program is stored as `key`, and then is converted to Base64 (because `encoder` is a Base64 encoder) and stored as `encodedkey`. Finally, it checks if `encodedkey` equals `cGwzYXMzX2wzdF9tM18xbnQwX3RoM19zYWYz` in the openSafe method. In other words, the string that we pass into the program when encoded in Base64 must be equal to `cGwzYXMzX2wzdF9tM18xbnQwX3RoM19zYWYz`. The easiest way to approach this is to decode the above string from Base64 to ASCII. The following python command should do the trick.
 
-```
+```bash
 └─$ python3
 Python 3.9.10 (main, Feb 22 2022, 13:54:07)
 [GCC 11.2.0] on linux
@@ -890,7 +1060,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 ```
 
 After getting the password, pass it back into the program to verify it is correct:
-```
+```bash
 └─$ java SafeOpener.java
 Enter password for the safe: pl3as3_l3t_m3_1nt0_th3_saf3
 cGwzYXMzX2wzdF9tM18xbnQwX3RoM19zYWYz
@@ -908,7 +1078,7 @@ Reverse engineer this [Python program](https://artifacts.picoctf.net/c/467/unpac
 ### *Writeup*
 First install the cryptography python library so that you can run the pythong program using `pip install cryptography`. Then, copy the contents of `unpackme.flag.py` to a new python file, except replace the last line of `exec(plain.decode())` to `print(plain.decode())` to see what the program is trying to execute.
 
-```
+```bash
 └─$ python3 unpackme.py
 
 pw = input('What\'s the password? ')
@@ -920,7 +1090,7 @@ else:
 ```
 
 After getting the password, pass it back into the program to verify it is correct:
-```
+```bash
 └─$ python3 unpackme.flag.py
 What's the password? batteryhorse
 picoCTF{175_chr157m45_188ab8c9}
@@ -935,9 +1105,9 @@ Can you get the flag? <br>
 Run this [Python program](https://artifacts.picoctf.net/c/431/bloat.flag.py) in the same directory as this [encrypted flag](https://artifacts.picoctf.net/c/431/flag.txt.enc).
 
 ### *Writeup*
-Looking at the python code for `bloat.flag.py` made me want to vomit, so I decided to create another python program called `bloat.py` that will replace the character concatenations with a whole string. I used python to do the job instead of looking up every index in `a`. Result looks like [this](./Reverse_Engineering/bloat.py/bloat.py).
+Looking at the python code for `bloat.flag.py`, I decided to use the Python shell to help convert the character concatenations with a whole string. I used python to do the job instead of looking up every index in `a`.
 
-```
+```bash
 └─$ python3
 Python 3.9.10 (main, Feb 22 2022, 13:54:07)
 [GCC 11.2.0] on linux
@@ -951,7 +1121,7 @@ Type "help", "copyright", "credits" or "license" for more information.
 
 It seems that the program takes user input and stores it as arg432, and passes that into function arg133 and checks if the input matches the string `happychance`. If it does then the function returns True and continues and prints the flag.
 
-```
+```bash
 └─$ python3 bloat.flag.py
 Please enter correct password for flag: happychance
 Welcome back... your flag, user:
@@ -974,7 +1144,7 @@ Reverse engineer this [Java program](https://artifacts.picoctf.net/c/210/KeygenM
 ### *Writeup*
 I recommend using the JD-GUI java decompiler using `sudo apt install jd-gui` since it comes with a gui. `javap` is also a decompiler but it only shows the method names of the .class file. 
 
-```
+```bash
 └─$ jd-gui KeygenMe.class
 ```
 
@@ -993,7 +1163,7 @@ Reverse engineer this [binary](https://artifacts.picoctf.net/c/304/bbbbloat).
 ### *Writeup*
 Opening the binary with Ghidra (`sudo apt install ghidra`, might need to do `sudo apt install default-jdk` beforehand) and going to the `.text` section of the binary, I see three functions: `FUN_00101620` pushed to register `R8`, `FUN_001015b0` to `RCX`, and `FUN_00101307` to `RDI`. The first two functions did not reveal anything, but the third function revealed something useful. It seems that in the function, it takes user input and stores in the variable `local_48`, and then checks if that variable is equal to `0x86187`. If it does not, then it prints the statement `Sorry, that's not it!`, but if it does then it seems it prints the flag. `0x861871` in decimal is 549255, which is the number the program is looking for.
 
-```
+```bash
 └─$ python3
 Python 3.9.10 (main, Feb 22 2022, 13:54:07)
 [GCC 11.2.0] on linux
@@ -1002,7 +1172,9 @@ Type "help", "copyright", "credits" or "license" for more information.
 549255
 ```
 
-```
+Terminal output:
+
+```bash
 └─$ ./bbbbloat
 What's my favorite number? 549255
 picoCTF{cu7_7h3_bl047_33e4341f}
@@ -1011,16 +1183,16 @@ picoCTF{cu7_7h3_bl047_33e4341f}
 Flag: `picoCTF{cu7_7h3_bl047_33e4341f}`
 
 # Web Exploitation
-- [Includes (100)](#includes)
-- [Inspect HTML (100)](#inspect-html)
-- [Local Authority (100)](#local-authority)
-- [Search source (100)](#search-source)
-- [Forbidden Paths (200)](#forbidden-paths)
-- [Power Cookie (200)](#power-cookie)
-- [Roboto Sans (200)](#roboto-sans)
-- [Secrets (200)](#secrets)
-- [SQL Direct (200)](#sql-direct)
-- [SQLiLite (300)](#sqlilite)
+- [Includes (100)](#Includes)
+- [Inspect HTML (100)](#Inspect-HTML)
+- [Local Authority (100)](#Local-Authority)
+- [Search source (100)](#Search-source)
+- [Forbidden Paths (200)](#Forbidden-Paths)
+- [Power Cookie (200)](#Power-Cookie)
+- [Roboto Sans (200)](#Roboto-Sans)
+- [Secrets (200)](#Secrets)
+- [SQL Direct (200)](#SQL-Direct)
+- [SQLiLite (300)](#SQLiLite)
 
 ## Includes
 
@@ -1204,11 +1376,11 @@ The website is [here](http://saturn.picoctf.net:58519/)
 ### *Writeup*
 Download the website as well as the dependencies using `wget -r`, which will recursively download all the files. After running `wget -r http://saturn.picoctf.net:58519/`, running `grep -r picoCTF{ saturn.picoctf.net\:58519/` to recursively search in the cloned directory showed a match in the `css/styles.css` file.
 
-```
+```bash
 └─$ wget -r http://saturn.picoctf.net:58519/
 ```
 
-```
+```bash
 └─$ grep -r picoCTF{ saturn.picoctf.net\:58519/
 saturn.picoctf.net:58519/css/style.css:/** banner_main picoCTF{1nsp3ti0n_0f_w3bpag3s_869d23af} **/
 ```
@@ -1242,7 +1414,7 @@ Go to this [website](http://saturn.picoctf.net:55771/) and see what you can disc
 </details>
 
 ### *Writeup*
-Going to the website there is a button that says `Continue as guest`, and going to it goes to `check.php` and a screen that says `We apologize, but we have no guest services at the moment.`. Looking at the cookies on Firefox by opening Web Developer Tools (<kbd>Ctrl</kbd>+<kbd>Shift</kbd>+<kbd>I</kbd>) and going to Cookies under Storage, I see there is a cookie called isAdmin with a value of 0. Changing the value from 0 to 1 and refreshing the page gives the flag.
+Going to the website there is a button that says `Continue as guest`, and going to it goes to `check.php` and a screen that says `We apologize, but we have no guest services at the moment.`. Looking at the cookies on Firefox by opening Web Developer Tools (<kbd>Ctrl+Shift+I</kbd>) and going to Cookies under Storage, I see there is a cookie called isAdmin with a value of 0. Changing the value from 0 to 1 and refreshing the page gives the flag.
 
 ![firefox-developer-tools](./Web_Exploitation/Power_Cookie/firefox-developer-tools.png)
 
@@ -1272,9 +1444,9 @@ svssshjweuiwl;oiho.bsvdaslejg
 Disallow: /wp-admin/
 ```
 
-I see a few hidden folders like `/cgi-bin/` and `/wp-admin/` but they do not lead to anywhere sadly. The weird strings might lead to something, and I assume it is in base64 considering how the second string ends in `==`. Running `robots.txt` through a [Base64 decoder python script](./Web_Exploitation/Roboto_Sans/robots.py) I wrote shows the following:
+I see a few hidden folders like `/cgi-bin/` and `/wp-admin/` but they do not lead to anywhere sadly. The weird strings might lead to something, and I assume it is in base64 considering how the second string ends in `==`. Running `robots.txt` through a Base64 decoder python script I wrote shows the following:
 
-```
+```bash
 └─$ python3 robots.py
 User-agent *
 Disallow: /cgi-bin/
@@ -1287,6 +1459,23 @@ Disallow: /wp-admin/
 ```
 
 The first and third string was unsuccessful in being decoded, but the second line decoded to `js/myfile.txt`. Going to that url indeed gives me the flag.
+
+Code for `robots.py`:
+
+```python
+import base64
+
+with open('saturn.picoctf.net:55983/robots.txt') as f:
+    contents = f.readlines()
+    for i in range(len(contents)):
+        if (3 < i < 7):
+            try:
+                print(base64.b64decode(contents[i][:-1].encode('ascii')).decode('ascii'))
+            except:
+                print(contents[i], end="")
+        else:
+            print(contents[i], end="")
+```
 
 Flag: `picoCTF{Who_D03sN7_L1k5_90B0T5_6ac64608}`
 
@@ -1328,7 +1517,7 @@ Password is `postgres`
 ### *Writeup*
 First install PostgreSQL (`sudo apt-get install postgresql-client`), and then log in to the server. Get a list of all the schemas by doing `\dt`. I see there's only one schema called `flags`, so I decided to print the whole table by running `SELECT * FROM flags` which printed the firstname, lastname, and address column, one of which is the flag.
 
-```
+```bash
 └─$ psql -h saturn.picoctf.net -p 60772 -U postgres pico
 Password for user postgres:
 psql (14.2 (Debian 14.2-1))
