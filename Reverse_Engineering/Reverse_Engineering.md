@@ -9,7 +9,7 @@
 - [x] [bloat.py (200)](#bloatpy)
 - [x] [Fresh Java (200)](#Fresh-Java)
 - [x] [Bbbbloat (300)](#Bbbbloat)
-- [ ] unpackme (300)
+- [x] [unpackme (300)](#unpackme)
 - [ ] Keygenme (400)
 - [ ] Wizardlike (500)
 
@@ -28,7 +28,6 @@ Download the program [here](https://artifacts.picoctf.net/c/311/run).
     <summary>Hint 2</summary>
     Try running it by adding a '.' in front of the path to the file (i.e. `$ ./run`)
 </details>
-
 
 ### *Writeup*
 
@@ -58,7 +57,6 @@ Download the program [here](https://artifacts.picoctf.net/c/354/run).
     <summary>Hint 1</summary>
     Try running it and add the phrase "Hello!" with a space in front (i.e. "./run Hello!")
 </details>
-
 
 ### *Writeup*
 
@@ -263,7 +261,6 @@ Reverse engineer this [Java program](https://artifacts.picoctf.net/c/210/KeygenM
     Use a decompiler for Java!
 </details>
 
-
 ### *Writeup*
 
 I recommend using the JD-GUI java decompiler using `sudo apt install jd-gui` since it comes with a gui. `javap` is also a decompiler but it only shows the method names of the .class file. 
@@ -289,6 +286,8 @@ Reverse engineer this [binary](https://artifacts.picoctf.net/c/304/bbbbloat).
 
 Opening the binary with Ghidra (`sudo apt install ghidra`, might need to do `sudo apt install default-jdk` beforehand) and going to the `.text` section of the binary, I see three functions: `FUN_00101620` pushed to register `R8`, `FUN_001015b0` to `RCX`, and `FUN_00101307` to `RDI`. The first two functions did not reveal anything, but the third function revealed something useful. It seems that in the function, it takes user input and stores in the variable `local_48`, and then checks if that variable is equal to `0x86187`. If it does not, then it prints the statement `Sorry, that's not it!`, but if it does then it seems it prints the flag. `0x861871` in decimal is 549255, which is the number the program is looking for.
 
+![ghidra](./Bbbbloat/ghidra.png)
+
 ```bash
 └─$ python3
 Python 3.9.10 (main, Feb 22 2022, 13:54:07)
@@ -307,3 +306,47 @@ picoCTF{cu7_7h3_bl047_33e4341f}
 ```
 
 Flag: `picoCTF{cu7_7h3_bl047_33e4341f}`
+
+## unpackme
+
+### *Description*
+
+Can you get the flag?<br>Reverse engineer this [binary](https://artifacts.picoctf.net/c/365/unpackme-upx).
+
+<details>
+    <summary>Hint 1</summary>
+    What is UPX?
+</details>
+
+### *Writeup*
+
+First install upx by running `sudo apt install upx` and then running `man upx` shows that the command is used to compress/expand executable files. Given the name of the challenge, it seems we have to decompress the executable, so running `upx -d unpackme-upx` shows that the executable decompressed from 379KB to 1MB.
+
+```bash
+└─$ upx -d unpackme-upx
+                       Ultimate Packer for eXecutables
+                          Copyright (C) 1996 - 2020
+UPX 3.96        Markus Oberhumer, Laszlo Molnar & John Reiser   Jan 23rd 2020
+
+        File size         Ratio      Format      Name
+   --------------------   ------   -----------   -----------
+   1002408 <-    379108   37.82%   linux/amd64   unpackme-upx
+
+Unpacked 1 file.
+```
+
+Running GDB on `unpackme-upx` shows that there is a main function, so in GDB and under `.text` jump to the main function by scrolling to address `0x401e73` or hit <kbd>G</kbd> in Ghidra and enter `main`.
+
+![ghidra](./unpackme/ghidra.png)
+
+Looking at the converted source code shows that after the prompt "What's my favorite number? ", the program expects the input variable `local_44` to be equal to `0xb83cb`, which is 754635 in decimal (you can click on the number in Ghidra and right click to get the conversions).
+
+Terminal output:
+
+```bash
+└─$ ./unpackme-upx
+What's my favorite number? 754635
+picoCTF{up><_m3_f7w_77ad107e}
+```
+
+Flag: `picoCTF{up><_m3_f7w_77ad107e}`

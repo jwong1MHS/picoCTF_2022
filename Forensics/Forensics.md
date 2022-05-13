@@ -50,7 +50,6 @@ You can download the file from [here](https://artifacts.picoctf.net/c/326/Flag.p
     Remember that some file types can contain and nest other files
 </details>
 
-
 ### *Writeup*
 
 Downloading and then running `file Flag.pdf` shows that it's a shell archive text, and reading the comments at the top of the file shows that to run a shell archive (shar) file you do `sh FILE`.
@@ -202,7 +201,6 @@ Download the data [here](https://artifacts.picoctf.net/c/297/anthem.flag.txt).
     Download the file and search for the flag based on the known prefix.
 </details>
 
-
 ### *Writeup*
 
 Run `grep picoCTF{ anthem.flag.txt` in the terminal.
@@ -226,7 +224,6 @@ Download the packet capture file and use packet analysis software to find the fl
     <summary>Hint 1</summary>
     Wireshark, if you can install and use it, is probably the most beginner friendly packet analysis software product.
 </details>
-
 
 ### *Writeup*
 
@@ -253,7 +250,6 @@ This [report](https://artifacts.picoctf.net/c/264/Financial_Report_for_ABC_Labs.
     <summary>Hint 1</summary>
     How can you be sure of the redaction?
 </details>
-
 
 ### *Writeup*
 
@@ -395,7 +391,6 @@ Download this packet capture and find the flag.
     All we know is that this packet capture includes a chat conversation and a file transfer.
 </details>
 
-
 ### *Writeup*
 
 Open the capture packet with Wireshark and analyze all the packets. Notice there is a TCP stream, and right clicking and Follow TCP Stream shows the following:
@@ -435,7 +430,6 @@ Download this image and find the flag. <br>
     <summary>Hint 1</summary>
     We know the end sequence of the message will be `$t3g0`.
 </details>
-
 
 ### *Writeup*
 

@@ -34,7 +34,6 @@ Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_
     <code>mod 37</code> means modulo 37. It gives the remainder of a number after being divided by 37.
 </details>
 
-
 ### *Writeup*
 
 Make a python script that will parse the text file and mod every number.
@@ -88,7 +87,6 @@ Wrap your decrypted message in the picoCTF flag format (i.e. `picoCTF{decrypted_
     It's recommended to use a tool to find the modular inverses
 </details>
 
-
 ### *Writeup*
 
 Make a python script that will parse the text file and mod every number and then find the modular inverse using `pow(a,-1,x)`.
@@ -132,7 +130,6 @@ The first user in `usernames.txt` corresponds to the first password in `password
     <summary>Hint 1</summary>
     Maybe other passwords will have hints about the leak?
 </details>
-
 
 ### *Writeup*
 
@@ -181,7 +178,6 @@ Wrap your answer with picoCTF{}, put underscores in place of pauses, and use all
     Audacity is a really good program to analyze morse code audio.
 </details>
 
-
 ### *Writeup*
 
 After analyzing the wav file using Audacity, I can see that the waveform is split by either short or long waves. The short ones are dots and the long ones are dashes. After writing down the morse code, I used an [online morse code translator](https://morsecode.world/international/translator.html) to convert the message.
@@ -223,7 +219,6 @@ Put the decoded message in the picoCTF flag format, `picoCTF{decoded_message}`.
     Once you've understood how the cipher works, it's best to draw it out yourself on paper
 </details>
 
-
 ### *Writeup*
 
 It is really tedious to do by hand since you have to take into account of padding the plaintext, so it is better to use an online cracking tool such as the one [here](https://www.boxentriq.com/code-breaking/rail-fence-cipher). Giving 4 rails should give a result.
@@ -248,7 +243,6 @@ Download the message [here](https://artifacts.picoctf.net/c/379/message.txt).
     <summary>Hint 1</summary>
     Try a frequency attack. An online tool might help.
 </details>
-
 
 ### *Writeup*
 
@@ -314,7 +308,6 @@ Download the message [here](https://artifacts.picoctf.net/c/414/message.txt).
     Do the punctuation and the individual words help you make any substitutions?
 </details>
 
-
 ### *Writeup*
 
 Make a python script and slowly replace letters. It started with knowing that the last sentence should have the string `picoCTF{` to knowing that the sentence should include `the flag is: picoCTF{`, and then figuring out that the message has to do with talking about CTFs. It was a lot of replacing letter by letter.
@@ -366,7 +359,6 @@ Download the message [here](https://artifacts.picoctf.net/c/107/message.txt).
     Try refining your frequency attack, maybe analyzing groups of letters would improve your results?
 </details>
 
-
 ### *Writeup*
 
 Make a python script and slowly replace letters. It started with knowing that the last sentence should have the string `picoCTF{` to knowing that the sentence should include `theflagispicoCTF{`, and then guessing what some of the words might be using context clues. It was a lot of replacing letter by letter.
@@ -416,7 +408,6 @@ Download the corrupted message [here](https://artifacts.picoctf.net/c/459/messag
     Split the message up into blocks of 3 and see how the first block is scrambled
 </details>
 
-
 ### *Writeup*
 
 Analyzing the corrupted message it seems that for every block of three characters, the first characters is moved to the end (so instead of 1 2 3 it got corrupted to 2 3 1). Make a python script that will check every third character and move it two places back.
@@ -456,7 +447,6 @@ Decrypt this [message](https://artifacts.picoctf.net/c/527/cipher.txt) using thi
     <summary>Hint 1</summary>
     https://en.wikipedia.org/wiki/Vigen%C3%A8re_cipher
 </details>
-
 
 ### *Writeup*
 
@@ -525,7 +515,6 @@ Wrap your decrypted message in the picoCTF flag format like: `picoCTF{decrypted_
     <summary>Hint 2</summary>
     For your Caesar shift amount, try forwards and backwards.
 </details>
-
 
 ### *Writeup*
 
