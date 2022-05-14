@@ -10,7 +10,7 @@
 - [x] [Fresh Java (200)](#Fresh-Java)
 - [x] [Bbbbloat (300)](#Bbbbloat)
 - [x] [unpackme (300)](#unpackme)
-- [ ] Keygenme (400)
+- [x] [Keygenme (400)](#Keygenme)
 - [ ] Wizardlike (500)
 
 ## file-run1
@@ -88,41 +88,7 @@ Here's the test drive instructions:
 
 Give permission to execute `gdbme` and run gdb on `gdbme`. Bring out the assembly code layout, set a breakpoint at the sleep call in the main function at address `(main+99)`, run the program which will stop at the sleep call, and the jump to the next instruction. What the gdb instructions are doing is it's jumping over the infinite sleep, whereas running the program normally will just have it be stuck on the sleep.
 
-```
-┌───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┐
-│   0x5555555552c7 <main>           endbr64                                                                                         │
-│   0x5555555552cb <main+4>         push   %rbp                                                                                     │
-│   0x5555555552cc <main+5>         mov    %rsp,%rbp                                                                                │
-│   0x5555555552cf <main+8>         sub    $0x50,%rsp                                                                               │
-│   0x5555555552d3 <main+12>        mov    %edi,-0x44(%rbp)                                                                         │
-│   0x5555555552d6 <main+15>        mov    %rsi,-0x50(%rbp)                                                                         │
-│   0x5555555552da <main+19>        mov    %fs:0x28,%rax                                                                            │
-│   0x5555555552e3 <main+28>        mov    %rax,-0x8(%rbp)                                                                          │
-│   0x5555555552e7 <main+32>        xor    %eax,%eax                                                                                │
-│   0x5555555552e9 <main+34>        movabs $0x4c75257240343a41,%rax                                                                 │
-│   0x5555555552f3 <main+44>        movabs $0x4362383846336235,%rdx                                                                 │
-│   0x5555555552fd <main+54>        mov    %rax,-0x30(%rbp)                                                                         │
-│   0x555555555301 <main+58>        mov    %rdx,-0x28(%rbp)                                                                         │
-│   0x555555555305 <main+62>        movabs $0x6430624760433530,%rax                                                                 │
-│   0x55555555530f <main+72>        movabs $0x4e3432656065365f,%rdx                                                                 │
-│   0x555555555319 <main+82>        mov    %rax,-0x20(%rbp)                                                                         │
-│   0x55555555531d <main+86>        mov    %rdx,-0x18(%rbp)                                                                         │
-│   0x555555555321 <main+90>        movb   $0x0,-0x10(%rbp)                                                                         │
-│   0x555555555325 <main+94>        mov    $0x186a0,%edi                                                                            │
-│B+ 0x55555555532a <main+99>        call   0x555555555110 <sleep@plt>                                                               │
-└───────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────────┘
-native No process In:                                                                                                   L??   PC: ?? 
-(gdb) break *(main+99)
-Breakpoint 1 at 0x132a
-(gdb) run
-Starting program: /mnt/c/Users/jason/Documents/GitHub/picoCTF_2022/Reverse_Engineering/GDB_Test_Drive/gdbme
-
-Breakpoint 1, 0x000055555555532a in main ()
-(gdb) jump *(main+104)
-Continuing at 0x55555555532f.
-picoCTF{d3bugg3r_dr1v3_50e616ac}
-(gdb) ior 1 (process 16883) exited normally]
-```
+![gdb](./GDB_Test_Drive/gdb.png)
 
 Flag: `picoCTF{d3bugg3r_dr1v3_50e616ac}`
 
@@ -350,3 +316,41 @@ picoCTF{up><_m3_f7w_77ad107e}
 ```
 
 Flag: `picoCTF{up><_m3_f7w_77ad107e}`
+
+## Keygenme
+
+### *Description*
+
+Can you get the flag?<br>Reverse engineer this [binary](https://artifacts.picoctf.net/c/513/keygenme).
+
+
+### *Writeup*
+
+This challenge requrires using both Ghidra and gdb at the same time
+
+First look at Ghidra, and under the `.text` section notice that `__libc_start_main` calls a function `FUN_0010148b`.
+
+Breaking at `printf` in gdb and letting the function finish by doing `finish` shows that when the function prints "Enter your license key: " to the console, it returns back to what appears to be the `main` function and jumps to address `0x5555555554be`. Run `layout asm` to see that the `main` function starts at `0x55555555548b`.
+
+![FUN_0010148b](C:\Users\jason\Documents\GitHub\picoCTF_2022\Reverse_Engineering\Keygenme\FUN_0010148b.png)
+
+Looking at Ghidra now it seems after the `fgets` the program calls another function `FUN_00101209`, and looking at the assembly in gdb shows that the function is at address `0x555555555209`.
+
+![gdb_main](./Keygenme/gdb_main.png)
+
+The decompiler shows variables `local_98=0x7b4654436f63697`0, `local_90=0x30795f676e317262`, `local_88=0x6b5f6e77305f7275`, and `local_80=0x5f7933`. These variables in ascii and reversed from little endian are `local_98=picoCTF{`, `local_90=br1ng_y0`, `local_88=ur_0wn_k`, and `local_80=3y_\0` , which you can find by hovering over the variable in Ghidra. Then, the length of the `char *` pointer is written to `sVar1` and you can see further in that function at line 66 that it checks if `sVar1 == 0x24`, where `0x24` in decimal is 36. In other words, the flag string should be exactly 36 characters long.
+
+![FUN_00101209](./Keygenme/FUN_00101209.png)
+
+Also it seems the string is copied to a buffer `acStack56` at line 54, and later from lines 56 to 64 there is more that is added to the `acStack56` buffer. What we want is to break before `sVar == strlen(param_1)` is checked, because `param_1` is the license key given by the user, and the input we gave is incorrect. Also, we want to print the stack at that breakpoint, because that is when the program has extended the `acStack56` buffer to include the rest of the flag. We want to break at address `0x555555555419`.
+
+![local_90_stack](./Keygenme/local_90_stack.png)
+
+Doing `x/40wx $rsp` and printing the string at `0x7fffffffdea0` on the stack shows that it is `picoCTF{br1ng_y0ur_0wn_k3y_`, which is basically `local_80` to `local_98`. This doesn't seem right, so time to look deeper into the stack.
+
+![image-20220514041959129](C:\Users\jason\AppData\Roaming\Typora\typora-user-images\image-20220514041959129.png)
+
+Printing the string at `0x7fffffffdf00` shows the full flag.
+
+Flag: `picoCTF{br1ng_y0ur_0wn_k3y_19836cd8}`
+
